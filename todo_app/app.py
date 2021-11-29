@@ -6,7 +6,7 @@ app = Flask(__name__)
 app.config.from_object(Config())
 
 
-@app.route('/', methods=['GET'])
+@app.route('/')
 def index():   
     return render_template('index.html', items = get_items())
 
