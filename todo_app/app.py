@@ -14,3 +14,9 @@ def index():
 def add_todo():
     add_item(request.form["addtask"])
     return redirect('/')
+
+@app.route ('/completeitem', methods = ['POST'])
+def make_complete():
+    add_item(request.form["addtask"])
+    return redirect('/')
+
