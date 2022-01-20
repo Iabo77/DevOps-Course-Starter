@@ -17,7 +17,7 @@ class Item:
 
 key = os.getenv('KEY')
 token = os.getenv('TOKEN')
-boardID = None
+boardID = os.getenv('BOARD_ID')
 todo_listID = None
 complete_listID = None
 BOARD_NAME = 'todoapplication'
@@ -31,25 +31,40 @@ _DEFAULT_ITEMS = [
     { 'id': 2, 'status': 'Not Started', 'title': 'Allow new items to be added' }
 ]
 
-def get_items_trello():
-    check_lists_exist() 
+def get_items_trello():  
+    
+    list_of_cards = []
+    json_lists = get_trello_lists() 
     json_cards = get_cards_json()
-    json_lists = get_trello_lists()    
+    # get_cards_params = {'key':key, 'token':token, 'filter':'open'}
+    # get_cards_uri = f'https://api.trello.com/1/boards/{boardID}/cards'
+    # get_cards_request = requests.get(get_cards_uri, params=get_cards_params)
+    # json_cards = get_cards_request.json()
+    # print(json_cards)
+    # return json_cards  
     for card in get_cards_json():
-        Item.from_trello_card(card, json_lists)
+        list_of_cards.append (Item.from_trello_card(card, json_lists[0]))
+        
+    for card in list_of_cards:
+        print (card.id + " " + card.name)       
+    return session.get('items', _DEFAULT_ITEMS.copy())
+ 
 
-
-def check_lists_exist():
-    if boardID is None:
-        create_trello_board()
-    if complete_listID is None or todo_listID is None:
-        create_trello_lists()
+def get_trello_lists():
+    print()
+    
+## logic to check lists exist and create if not
+## get jsonlist
 
 def get_cards_json():
+    list_of_cards = []
     get_cards_params = {'key':key, 'token':token, 'filter':'open'}
     get_cards_uri = f'https://api.trello.com/1/boards/{boardID}/cards'
     get_cards_request = requests.get(get_cards_uri, params=get_cards_params)
-    json_cards = get_cards_request.json()
+    json_cards = get_cards_request.json()   
+
+
+    print(json_cards)
     return json_cards
 
 def get_trello_lists():
@@ -58,7 +73,7 @@ def get_trello_lists():
     get_list_request = requests.get(get_lists_uri, get_lists_params)    
     json_lists = get_list_request.json()
     return json_lists
-
+    
     print (json_lists)
     
     ##for card in json_cards:
