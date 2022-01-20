@@ -1,6 +1,8 @@
+from ast import Or
 from flask import session
 import requests
 import os
+import json
 
 class Item:
     def __init__(self, id, name, status = 'To Do'):
@@ -15,7 +17,13 @@ class Item:
 
 key = os.getenv('KEY')
 token = os.getenv('TOKEN')
-boardID = os.getenv('BOARD_ID')
+boardID = None
+todo_listID = None
+complete_listID = None
+BOARD_NAME = 'todoapplication'
+TODO_LIST_NAME = 'TO DO'
+COMPLETE_LIST_NAME = 'COMPLETE'
+
 
 
 _DEFAULT_ITEMS = [
@@ -23,19 +31,57 @@ _DEFAULT_ITEMS = [
     { 'id': 2, 'status': 'Not Started', 'title': 'Allow new items to be added' }
 ]
 
-
 def get_items_trello():
-    """
-    Fetches all saved items from the session.
+    check_lists_exist() 
+    json_cards = get_cards_json()
+    json_lists = get_trello_lists()    
+    for card in get_cards_json():
+        Item.from_trello_card(card, json_lists)
 
-    Returns:
-        list: The list of saved items.
-    """
-    query = {'key':key, 'token':token, 'filter':'open'}
-    uri = f'https://api.trello.com/1/boards/{boardID}/cards'
-    response = requests.get(uri, params=query)
-    print(response)
+
+def check_lists_exist():
+    if boardID is None:
+        create_trello_board()
+    if complete_listID is None or todo_listID is None:
+        create_trello_lists()
+
+def get_cards_json():
+    get_cards_params = {'key':key, 'token':token, 'filter':'open'}
+    get_cards_uri = f'https://api.trello.com/1/boards/{boardID}/cards'
+    get_cards_request = requests.get(get_cards_uri, params=get_cards_params)
+    json_cards = get_cards_request.json()
+    return json_cards
+
+def get_trello_lists():
+    get_lists_params = {'key':key, 'token':token}
+    get_lists_uri = f'https://api.trello.com/1/boards/{boardID}/lists'    
+    get_list_request = requests.get(get_lists_uri, get_lists_params)    
+    json_lists = get_list_request.json()
+    return json_lists
+
+    print (json_lists)
+    
+    ##for card in json_cards:
+    ##    Item.from_trello_card(card,list)
+
     return session.get('items', _DEFAULT_ITEMS.copy())
+
+def check_board_exists():
+    Create_boards()
+
+def get_cards_json():
+    get_cards_params = {'key':key, 'token':token, 'filter':'open'}
+    get_cards_uri = f'https://api.trello.com/1/boards/{boardID}/cards'
+    get_cards_request = requests.get(get_cards_uri, params=get_cards_params)
+    json_cards = get_cards_request.json()
+    return json_cards
+
+def get_trello_lists():
+    get_lists_params = {'key':key, 'token':token}
+    get_lists_uri = f'https://api.trello.com/1/boards/{boardID}/lists'    
+    get_list_request = requests.get(get_lists_uri, get_lists_params)    
+    json_lists = get_list_request.json()
+    return json_lists
 
 
 def get_item(id):
