@@ -66,8 +66,6 @@ def get_trello_lists():
 
     return session.get('items', _DEFAULT_ITEMS.copy())
 
-def check_board_exists():
-    Create_boards()
 
 def get_cards_json():
     get_cards_params = {'key':key, 'token':token, 'filter':'open'}
