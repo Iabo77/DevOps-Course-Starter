@@ -11,90 +11,46 @@ class Item:
         self.status = status
         
     @classmethod
-    def from_trello_card(cls, card, list):
-        return cls(card['id'], card['name'], list['name'])
+    def from_trello_card(cls, card, status):
+        return cls(card['id'], card['name'], status)
 
 
-key = os.getenv('KEY')
-token = os.getenv('TOKEN')
-boardID = os.getenv('BOARD_ID')
-todo_listID = None
-complete_listID = None
-BOARD_NAME = 'todoapplication'
-TODO_LIST_NAME = 'TO DO'
-COMPLETE_LIST_NAME = 'COMPLETE'
-
-
+api_key = os.getenv('KEY')
+api_token = os.getenv('TOKEN')
+trello_board_id = os.getenv('BOARD_ID')
 
 _DEFAULT_ITEMS = [
     { 'id': 1, 'status': 'Not Started', 'title': 'List saved todo items' },
     { 'id': 2, 'status': 'Not Started', 'title': 'Allow new items to be added' }
 ]
 
-def get_items_trello():  
-    
-    list_of_cards = []
-    json_lists = get_trello_lists() 
-    json_cards = get_cards_json()
-    # get_cards_params = {'key':key, 'token':token, 'filter':'open'}
-    # get_cards_uri = f'https://api.trello.com/1/boards/{boardID}/cards'
-    # get_cards_request = requests.get(get_cards_uri, params=get_cards_params)
-    # json_cards = get_cards_request.json()
-    # print(json_cards)
-    # return json_cards  
-    for card in get_cards_json():
-        list_of_cards.append (Item.from_trello_card(card, json_lists[0]))
-        
-    for card in list_of_cards:
-        print (card.id + " " + card.name)       
+def get_items_trello():        
+    open_cards = []    
+    card_list = get_cards_from_trello()
+    list_dictionary = get_lists_from_trello() 
+    for card in card_list:
+        status_of_card = list_dictionary.get(card['idList'])
+        open_cards.append(Item.from_trello_card(card, status_of_card))       
     return session.get('items', _DEFAULT_ITEMS.copy())
  
-
-def get_trello_lists():
-    print()
-    
-## logic to check lists exist and create if not
-## get jsonlist
-
-def get_cards_json():
-    list_of_cards = []
-    get_cards_params = {'key':key, 'token':token, 'filter':'open'}
-    get_cards_uri = f'https://api.trello.com/1/boards/{boardID}/cards'
+def get_cards_from_trello():
+    open_cards = []
+    get_cards_params = {'key':api_key, 'token':api_token, 'filter':'open'}
+    get_cards_uri = f'https://api.trello.com/1/boards/{trello_board_id}/cards'
     get_cards_request = requests.get(get_cards_uri, params=get_cards_params)
     json_cards = get_cards_request.json()   
+    return open_cards
 
-
-    print(json_cards)
-    return json_cards
-
-def get_trello_lists():
-    get_lists_params = {'key':key, 'token':token}
-    get_lists_uri = f'https://api.trello.com/1/boards/{boardID}/lists'    
-    get_list_request = requests.get(get_lists_uri, get_lists_params)    
-    json_lists = get_list_request.json()
-    return json_lists
+def get_lists_from_trello():
+    list_dict = {}
+    get_board_lists_params = {'key':api_key, 'token':api_token}
+    get_board_lists_uri = f'https://api.trello.com/1/boards/{trello_board_id}/lists'    
+    get_board_lists_request = requests.get(get_board_lists_uri, get_board_lists_params)    
+    json_lists = get_board_lists_request.json()
+    for list in json_lists:
+        list_dict.update ({list['id'] : list['name']})
+    return list_dict 
     
-    print (json_lists)
-    
-    ##for card in json_cards:
-    ##    Item.from_trello_card(card,list)
-
-    return session.get('items', _DEFAULT_ITEMS.copy())
-
-
-def get_cards_json():
-    get_cards_params = {'key':key, 'token':token, 'filter':'open'}
-    get_cards_uri = f'https://api.trello.com/1/boards/{boardID}/cards'
-    get_cards_request = requests.get(get_cards_uri, params=get_cards_params)
-    json_cards = get_cards_request.json()
-    return json_cards
-
-def get_trello_lists():
-    get_lists_params = {'key':key, 'token':token}
-    get_lists_uri = f'https://api.trello.com/1/boards/{boardID}/lists'    
-    get_list_request = requests.get(get_lists_uri, get_lists_params)    
-    json_lists = get_list_request.json()
-    return json_lists
 
 
 def get_item(id):
