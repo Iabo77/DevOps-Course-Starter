@@ -19,7 +19,7 @@
         </form>
       <ul class="list-group mb-4">
         {% for item in items %}        
-          <li>{{item.name}}  {{item.status}} <a href={{ url_for('make_complete', id = item.id) }}>   complete</a></li>             
+          <li>{{item.name}}   <a href={{ url_for('make_complete', id = item.id) }}>   complete</a></li>             
         {% endfor %}
      </ul>   
     </div>

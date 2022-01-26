@@ -1,4 +1,3 @@
-from ast import Or
 from flask import session
 import requests
 import os
@@ -53,8 +52,9 @@ def add_item(title):
     return post_new_card_request  
 
 def complete_item(id):    
-    update_item = next((x for x in get_items() if x.id == id), None)
-    if update_item == None:
+    open_cards = get_items()
+    update_item = next((x for x in open_cards if x.id == id), None)
+    if update_item == None:  # check required to resolve issue where multiple clicks on complete call hyperlink before page had updated caused error
         return "none"
     update_item.status = "Done"
     complete_list_id = get_lists_from_trello()['Done']       
@@ -62,36 +62,3 @@ def complete_item(id):
     complete_card_params = {'key':api_key, 'token':api_token, 'idList':complete_list_id}
     complete_card_request = requests.put(complete_card_uri, complete_card_params) 
     return complete_card_request 
-
-
-"""
-def change_status_complete(Item):
-    
-    Updates an existing item in the session. If no existing item matches the ID of the specified item, nothing is saved.
-
-    Args:
-        item: The item to save.
-    
-    existing_items = get_items()
-    updated_items = [item if item['id'] == existing_item['id'] else existing_item for existing_item in existing_items]
-
-    session['items'] = updated_items
-
-    return item
-"""
-
-"""
-def get_item(id):
-    
-    Fetches the saved item with the specified ID.
-
-    Args:
-        id: The ID of the item.
-
-    Returns:
-        item: The saved item, or None if no items match the specified ID.
-    
-    items = get_items()
-    return next((item for item in items if item['id'] == int(id)), None)
-"""
-

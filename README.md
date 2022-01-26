@@ -2,6 +2,7 @@
 
 ## System Requirements
 
+
 The project uses poetry for Python to create an isolated environment and manage package dependencies. To prepare your system, ensure you have an official distribution of Python version 3.7+ and install Poetry using one of the following commands (as instructed by the [poetry documentation](https://python-poetry.org/docs/#system-requirements)):
 
 ### Poetry installation (Bash)
@@ -31,6 +32,26 @@ $ cp .env.template .env  # (first time only)
 ```
 
 The `.env` file is used by flask to set environment variables when running `flask run`. This enables things like development mode (which also enables features like hot reloading when you make a file change). There's also a [SECRET_KEY](https://flask.palletsprojects.com/en/1.1.x/config/#SECRET_KEY) variable which is used to encrypt the flask session cookie.
+
+
+## Setting up Trello
+### Trello Board creation
+To run the application a Trello board needs to created with two lists "To Do" and "Done"; these should be created by default when a new Trello board is createdm or they can be created manually with these exact names.
+
+The board name is unimportant but it would be a good idea to give it a descriptive name  ie'To Do App board' 
+
+### Trello Environmental variables
+Environmental variables need to entered in the .env file for the app to work
+
+KEY= Trello account Key
+TOKEN= Trello account Token
+These can be established by visiting https://trello.com/app-key and the generate token link on same page.
+
+BOARD_ID= the Trello board ID being used
+This can be established by querying the Trello API  :
+https://api.trello.com/1/members/me/boards?fields=name,url&key={{apiKey}}&token={{apiToken}}
+where apiKey and apiToken are the KEY and TOKEN values from above.
+
 
 ## Running the App
 
