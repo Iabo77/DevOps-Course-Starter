@@ -11,7 +11,7 @@ class Item:
         self.status = status
         
     @classmethod
-    def from_trello_card(cls, card, status):
+    def from_trello_card(cls, card, status = 'To Do'):
         return cls(card['id'], card['name'], status)
 
 
@@ -22,10 +22,11 @@ trello_board_id = os.getenv('BOARD_ID')
 def get_items():        
     open_cards = []    
     card_list = get_cards_from_trello()
-    trello_lists = get_lists_from_trello() 
-    for card in card_list:
-        status_of_card = trello_lists.get(card['idList'])
-        open_cards.append(Item.from_trello_card(card, status_of_card))     
+    trello_lists = get_lists_from_trello()    
+    for card in card_list:                
+        card_status = (trello_lists[card['idList']]) 
+        if card_status == 'To Do':
+            open_cards.append(Item.from_trello_card(card, card_status))           
     return open_cards
  
 def get_cards_from_trello():   
@@ -40,20 +41,31 @@ def get_lists_from_trello():
     get_board_lists_uri = f'https://api.trello.com/1/boards/{trello_board_id}/lists'    
     get_board_lists_request = requests.get(get_board_lists_uri, get_board_lists_params)    
     for list in get_board_lists_request.json():
-        trello_lists.update ({list['name'] : list['id']})
+        trello_lists.update ({list['name'] : list['id']}) 
+        trello_lists.update ({list['id'] : list['name']})   
     return trello_lists     
 
 def add_item(title):        
     todo_list_id = get_lists_from_trello()['To Do']      
     post_new_card_uri = f'https://api.trello.com/1/cards'    
     post_new_card_params = {'key':api_key, 'token':api_token, 'idList':todo_list_id, 'name': title}
-    print(post_new_card_params)
     post_new_card_request = requests.post(post_new_card_uri, post_new_card_params) 
     return post_new_card_request  
 
+def complete_item(id):    
+    update_item = next((x for x in get_items() if x.id == id), None)
+    if update_item == None:
+        return "none"
+    update_item.status = "Done"
+    complete_list_id = get_lists_from_trello()['Done']       
+    complete_card_uri = f'https://api.trello.com/1/cards/{id}'
+    complete_card_params = {'key':api_key, 'token':api_token, 'idList':complete_list_id}
+    complete_card_request = requests.put(complete_card_uri, complete_card_params) 
+    return complete_card_request 
+
 
 """
-def save_item(item):
+def change_status_complete(Item):
     
     Updates an existing item in the session. If no existing item matches the ID of the specified item, nothing is saved.
 
