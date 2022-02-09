@@ -1,4 +1,3 @@
-from ast import Or
 from flask import session
 import requests
 import os
@@ -11,125 +10,55 @@ class Item:
         self.status = status
         
     @classmethod
-    def from_trello_card(cls, card, list):
-        return cls(card['id'], card['name'], list['name'])
+    def from_trello_card(cls, card, status = 'To Do'):
+        return cls(card['id'], card['name'], status)
 
 
-key = os.getenv('KEY')
-token = os.getenv('TOKEN')
-boardID = None
-todo_listID = None
-complete_listID = None
-BOARD_NAME = 'todoapplication'
-TODO_LIST_NAME = 'TO DO'
-COMPLETE_LIST_NAME = 'COMPLETE'
+api_key = os.getenv('KEY')
+api_token = os.getenv('TOKEN')
+trello_board_id = os.getenv('BOARD_ID')
 
-
-
-_DEFAULT_ITEMS = [
-    { 'id': 1, 'status': 'Not Started', 'title': 'List saved todo items' },
-    { 'id': 2, 'status': 'Not Started', 'title': 'Allow new items to be added' }
-]
-
-def get_items_trello():
-    check_lists_exist() 
-    json_cards = get_cards_json()
-    json_lists = get_trello_lists()    
-    for card in get_cards_json():
-        Item.from_trello_card(card, json_lists)
-
-
-def check_lists_exist():
-    if boardID is None:
-        create_trello_board()
-    if complete_listID is None or todo_listID is None:
-        create_trello_lists()
-
-def get_cards_json():
-    get_cards_params = {'key':key, 'token':token, 'filter':'open'}
-    get_cards_uri = f'https://api.trello.com/1/boards/{boardID}/cards'
+def get_items():        
+    open_cards = []    
+    card_list = get_cards_from_trello()
+    trello_lists = get_lists_from_trello()    
+    for card in card_list:                
+        card_status = (trello_lists[card['idList']]) 
+        if card_status == 'To Do':
+            open_cards.append(Item.from_trello_card(card, card_status))           
+    return open_cards
+ 
+def get_cards_from_trello():   
+    get_cards_uri = f'https://api.trello.com/1/boards/{trello_board_id}/cards'
+    get_cards_params = {'key':api_key, 'token':api_token, 'filter':'open'}
     get_cards_request = requests.get(get_cards_uri, params=get_cards_params)
-    json_cards = get_cards_request.json()
-    return json_cards
+    return get_cards_request.json()
 
-def get_trello_lists():
-    get_lists_params = {'key':key, 'token':token}
-    get_lists_uri = f'https://api.trello.com/1/boards/{boardID}/lists'    
-    get_list_request = requests.get(get_lists_uri, get_lists_params)    
-    json_lists = get_list_request.json()
-    return json_lists
+def get_lists_from_trello():
+    trello_lists = {}
+    get_board_lists_params = {'key':api_key, 'token':api_token}
+    get_board_lists_uri = f'https://api.trello.com/1/boards/{trello_board_id}/lists'    
+    get_board_lists_request = requests.get(get_board_lists_uri, get_board_lists_params)    
+    for list in get_board_lists_request.json():
+        trello_lists.update ({list['name'] : list['id']}) 
+        trello_lists.update ({list['id'] : list['name']})   
+    return trello_lists     
 
-    print (json_lists)
-    
-    ##for card in json_cards:
-    ##    Item.from_trello_card(card,list)
+def add_item(title):        
+    todo_list_id = get_lists_from_trello()['To Do']      
+    post_new_card_uri = f'https://api.trello.com/1/cards'    
+    post_new_card_params = {'key':api_key, 'token':api_token, 'idList':todo_list_id, 'name': title}
+    post_new_card_request = requests.post(post_new_card_uri, post_new_card_params) 
+    return post_new_card_request  
 
-    return session.get('items', _DEFAULT_ITEMS.copy())
-
-
-def get_cards_json():
-    get_cards_params = {'key':key, 'token':token, 'filter':'open'}
-    get_cards_uri = f'https://api.trello.com/1/boards/{boardID}/cards'
-    get_cards_request = requests.get(get_cards_uri, params=get_cards_params)
-    json_cards = get_cards_request.json()
-    return json_cards
-
-def get_trello_lists():
-    get_lists_params = {'key':key, 'token':token}
-    get_lists_uri = f'https://api.trello.com/1/boards/{boardID}/lists'    
-    get_list_request = requests.get(get_lists_uri, get_lists_params)    
-    json_lists = get_list_request.json()
-    return json_lists
-
-
-def get_item(id):
-    """
-    Fetches the saved item with the specified ID.
-
-    Args:
-        id: The ID of the item.
-
-    Returns:
-        item: The saved item, or None if no items match the specified ID.
-    """
-    items = get_items_trello()
-    return next((item for item in items if item['id'] == int(id)), None)
-
-
-def add_item(title):
-    """
-    Adds a new item with the specified title to the session.
-
-    Args:
-        title: The title of the item.
-
-    Returns:
-        item: The saved item.
-    """
-    items = get_items_trello()
-
-    # Determine the ID for the item based on that of the previously added item
-    id = items[-1]['id'] + 1 if items else 0
-
-    item = { 'id': id, 'title': title, 'status': 'Not Started' }
-
-    # Add the item to the list
-    items.append(item)
-    session['items'] = items
-
-    return item
-
-
-def save_item(item):
-    """
-    Updates an existing item in the session. If no existing item matches the ID of the specified item, nothing is saved.
-
-    Args:
-        item: The item to save.
-    """
-    existing_items = get_items_trello()
-    updated_items = [item if item['id'] == existing_item['id'] else existing_item for existing_item in existing_items]
-
-    session['items'] = updated_items
-
-    return item
+def complete_item(id):    
+    open_cards = get_items()
+    update_item = next((x for x in open_cards if x.id == id), None)
+    if update_item == None:  # check required to resolve issue where multiple clicks on complete call hyperlink before page had updated caused error
+        return "none"
+    update_item.status = "Done"
+    complete_list_id = get_lists_from_trello()['Done']       
+    complete_card_uri = f'https://api.trello.com/1/cards/{id}'
+    complete_card_params = {'key':api_key, 'token':api_token, 'idList':complete_list_id}
+    complete_card_request = requests.put(complete_card_uri, complete_card_params) 
+    return complete_card_request 
