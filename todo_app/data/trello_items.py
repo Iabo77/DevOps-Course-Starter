@@ -2,6 +2,7 @@ from flask import session
 import requests
 import os
 import json
+import todo_app.data.views
 
 class Item:
     def __init__(self, id, name, status = 'To Do'):
