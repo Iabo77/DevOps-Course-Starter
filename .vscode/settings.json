@@ -1,0 +1,7 @@
+{
+    "python.testing.pytestArgs": [
+        "todo_app"
+    ],
+    "python.testing.unittestEnabled": false,
+    "python.testing.pytestEnabled": true
+}

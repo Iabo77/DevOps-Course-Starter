@@ -23,7 +23,7 @@ def get_items():
     open_cards = []    
     card_list = get_cards_from_trello()
     trello_lists = get_lists_from_trello()    
-    for card in card_list:                
+    for card in card_list:       
         card_status = (trello_lists[card['idList']]) 
         open_cards.append(Item.from_trello_card(card, card_status))           
     return open_cards
@@ -41,7 +41,8 @@ def get_lists_from_trello():
     get_board_lists_request = requests.get(get_board_lists_uri, get_board_lists_params)    
     for list in get_board_lists_request.json():
         trello_lists.update ({list['name'] : list['id']}) 
-        trello_lists.update ({list['id'] : list['name']})   
+        trello_lists.update ({list['id'] : list['name']}) 
+
     return trello_lists     
 
 def add_item(title):        
