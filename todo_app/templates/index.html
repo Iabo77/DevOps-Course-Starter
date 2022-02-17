@@ -18,7 +18,7 @@
         <h2>Items</h2>
         </form>
       <ul class="list-group mb-4">
-        {% for item in items %}        
+        {% for item in view_model.items %}        
           <li>{{item.name}}   <a href={{ url_for('make_complete', id = item.id) }}>   complete</a></li>             
         {% endfor %}
      </ul>   
