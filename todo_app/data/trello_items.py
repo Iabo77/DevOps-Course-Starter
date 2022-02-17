@@ -25,8 +25,7 @@ def get_items():
     trello_lists = get_lists_from_trello()    
     for card in card_list:                
         card_status = (trello_lists[card['idList']]) 
-        if card_status == 'To Do':
-            open_cards.append(Item.from_trello_card(card, card_status))           
+        open_cards.append(Item.from_trello_card(card, card_status))           
     return open_cards
  
 def get_cards_from_trello():   
