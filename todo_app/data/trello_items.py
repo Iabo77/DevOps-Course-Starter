@@ -1,3 +1,4 @@
+from datetime import datetime, timedelta
 from flask import session
 import requests
 import os
@@ -5,14 +6,15 @@ import json
 
 
 class Item:
-    def __init__(self, id, name, status = 'To Do'):
+    def __init__(self, id, name, status = 'To Do', date_modified = datetime.now()):
         self.id = id
         self.name = name
         self.status = status
+        self.date_modified = date_modified
         
     @classmethod
     def from_trello_card(cls, card, status = 'To Do'):
-        return cls(card['id'], card['name'], status)
+        return cls(card['id'], card['name'], status, card['dateLastActivity'])
 
 
 api_key = os.getenv('KEY')
