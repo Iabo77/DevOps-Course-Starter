@@ -15,12 +15,25 @@
         <input type="text" name="addtask">
         <input name="Submit" type="submit">
         </p>
-        <h2>Items</h2>
+        <h2>To Do</h2>
         </form>
       <ul class="list-group mb-4">
-        {% for item in view_model.items %}        
+        {% for item in view_model.todo_items %}        
       <li>{{item.name}}   <a href={{ url_for('make_complete', id = item.id) }}>   complete</a></li>             
         {% endfor %}
+        <h2>Doing</h2>
+      </form>
+      <ul class="list-group mb-4">
+        {% for item in view_model.doing_items %}        
+      <li>{{item.name}}  {{item.status}}   <a href={{ url_for('make_complete', id = item.id) }}>   complete</a></li>             
+        {% endfor %}
+        <h2>Done</h2>
+      </form> 
+      <ul class="list-group mb-4">
+        {% for item in view_model.done_items %}        
+      <li>{{item.name}}   <a href={{ url_for('make_complete', id = item.id) }}>   complete</a></li>             
+        {% endfor %}
+
      </ul>   
     </div>
   </div>
