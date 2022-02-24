@@ -5,6 +5,7 @@ import os
 import json
 
 
+
 class Item:
     def __init__(self, id, name, status = 'To Do', date_modified = datetime.now()):
         self.id = id
@@ -21,7 +22,15 @@ api_key = os.getenv('KEY')
 api_token = os.getenv('TOKEN')
 trello_board_id = os.getenv('BOARD_ID')
 
-def get_items():        
+def set_global_env_variables(): 
+    global api_key 
+    api_key = os.getenv('KEY')
+    global api_token
+    api_token = os.getenv('TOKEN')
+    global trello_board_id
+    trello_board_id = os.getenv('BOARD_ID')
+
+def get_items(): 
     open_cards = []    
     card_list = get_cards_from_trello()
     trello_lists = get_lists_from_trello()    
@@ -44,7 +53,6 @@ def get_lists_from_trello():
     for list in get_board_lists_request.json():
         trello_lists.update ({list['name'] : list['id']}) 
         trello_lists.update ({list['id'] : list['name']}) 
-
     return trello_lists     
 
 def add_item(title):        

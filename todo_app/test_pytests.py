@@ -1,11 +1,26 @@
 from re import A
 import pytest
+from todo_app import app
+from dotenv import load_dotenv, find_dotenv
 from datetime import date, datetime, timedelta
-from todo_app.data.trello_items import Item
+from todo_app.data.trello_items import *
 from todo_app.data.views import ViewModel
+import os
+import requests
 
 
-#hardcoded date time values to test datetime logic consistently
+@pytest.fixture
+def client():
+    #Use our test integration config instead of the 'real' version
+    file_path = find_dotenv('.env.test')
+    load_dotenv(file_path, override=True)
+    set_global_env_variables()   # function required to overide env variables loaded with file
+    test_app = app.create_app()    
+    with test_app.test_client() as client:
+        yield client
+
+
+#hardcoded date time values to test datetime logic consistently (for fture stretch testing/functionality)
 date_today = datetime(2022,6,15)
 date_yesterday = datetime(2022,6,14)
 date_last_week = datetime(2022,6,8)
@@ -81,6 +96,39 @@ def test_viewmodel_return_doing_cards(card_list, expected):
     assert len(returned_items) == expected
     for item in returned_items:
         assert item.status == 'Doing'
+
+
+
+def test_index_page(monkeypatch, client):
+# Replace call to requests.get(url) with our own function
+    monkeypatch.setattr(requests, 'get', get_trello_data_stub)
+    response = client.get('/')
+    assert response.status_code == 200
+    assert 'testcard123' in response.data.decode()
+    
+class StubResponse():
+    def __init__(self, fake_response_data):
+        self.fake_response_data = fake_response_data
+    def json(self):
+        return self.fake_response_data
+
+def get_trello_data_stub(url, params):
+    test_board_id = os.environ.get('BOARD_ID')
+    fake_response_data = []
+    if url == f'https://api.trello.com/1/boards/{test_board_id}/lists':
+        fake_response_data = [{
+        'id': '123abc',
+        'name': 'To Do'
+        }]
+    elif url == f'https://api.trello.com/1/boards/{test_board_id}/cards':
+        fake_response_data = [{
+        'idList': '123abc',
+        'name': 'testcard123',
+        'id' : '12345',
+        'dateLastActivity' : date_today
+        }]     
+    return StubResponse(fake_response_data)
+
 
 """
 @pytest.mark.parametrize("card_list, expected", [(cards_todo, 0),(cards_doing,0), (cards_done,1), (cards_empty,0), (cards_mixed,2)])
