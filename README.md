@@ -58,7 +58,7 @@ where apiKey and apiToken are the KEY and TOKEN values from above.
 Once the all dependencies have been installed, start the Flask app in development mode within the Poetry environment by running:
 ```bash
 $ poetry run flask run
-```
+ ```
 
 You should see output similar to the following:
 ```bash
@@ -71,3 +71,19 @@ You should see output similar to the following:
  * Debugger PIN: 226-556-590
 ```
 Now visit [`http://localhost:5000/`](http://localhost:5000/) in your web browser to view the app.
+
+
+## Testing
+
+There are unit tests to check correct data is returned from the viewmodel properties and an integration test to check the index.html data is populated with expected data using mocked json data for both list and card trello API
+
+To run pytests from command line 
+poetry run pytest -rA 
+This will run and provide output from all tests and their names.
+
+to run individual tests use the poetry run pytest -k "keyword" command where keyword is a term within the test title which you wish to run. 
+ie poetry run pytest -k "open"
+
+Pytest tests can also be run from VSCode testing tab in the side bar if configured with correct extensions.
+
+
