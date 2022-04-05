@@ -1,31 +1,42 @@
+from datetime import datetime, timedelta
 from flask import session
 import requests
 import os
 import json
 
+
+
 class Item:
-    def __init__(self, id, name, status = 'To Do'):
+    def __init__(self, id, name, status = 'To Do', date_modified = datetime.now()):
         self.id = id
         self.name = name
         self.status = status
+        self.date_modified = date_modified
         
     @classmethod
     def from_trello_card(cls, card, status = 'To Do'):
-        return cls(card['id'], card['name'], status)
+        return cls(card['id'], card['name'], status, card['dateLastActivity'])
 
 
 api_key = os.getenv('KEY')
 api_token = os.getenv('TOKEN')
 trello_board_id = os.getenv('BOARD_ID')
 
-def get_items():        
+def set_global_env_variables(): 
+    global api_key 
+    api_key = os.getenv('KEY')
+    global api_token
+    api_token = os.getenv('TOKEN')
+    global trello_board_id
+    trello_board_id = os.getenv('BOARD_ID')
+
+def get_items(): 
     open_cards = []    
     card_list = get_cards_from_trello()
     trello_lists = get_lists_from_trello()    
-    for card in card_list:                
+    for card in card_list:       
         card_status = (trello_lists[card['idList']]) 
-        if card_status == 'To Do':
-            open_cards.append(Item.from_trello_card(card, card_status))           
+        open_cards.append(Item.from_trello_card(card, card_status))           
     return open_cards
  
 def get_cards_from_trello():   
@@ -41,7 +52,7 @@ def get_lists_from_trello():
     get_board_lists_request = requests.get(get_board_lists_uri, get_board_lists_params)    
     for list in get_board_lists_request.json():
         trello_lists.update ({list['name'] : list['id']}) 
-        trello_lists.update ({list['id'] : list['name']})   
+        trello_lists.update ({list['id'] : list['name']}) 
     return trello_lists     
 
 def add_item(title):        
