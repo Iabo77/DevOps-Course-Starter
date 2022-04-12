@@ -87,3 +87,14 @@ ie poetry run pytest -k "open"
 Pytest tests can also be run from VSCode testing tab in the side bar if configured with correct extensions.
 
 
+## Automated Deployment
+
+There are files required to support automated Ansible deployment located in repository /deployment directory.
+These files will need to be copied to the ec2-user home directory on the ansible controller node and executed from this directory using the following command
+
+ansible-playbook ansible-playbook.yml -i ansible-inventory
+
+Required variables can be established following process detailed in Trello environmental variables section
+
+
+
