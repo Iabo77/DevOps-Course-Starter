@@ -1,0 +1,79 @@
+- name: Install ToDo App and onto Webservers
+  hosts: webservers
+  remote_user: ec2-user
+  vars_prompt:
+      - name: secretkey
+        prompt: "enter secret-key value (default: secret-key)"
+        default: "secret-key"
+        private: no
+
+      - name: boardID
+        prompt: Enter Trello Board ID     
+        private: no   
+
+      - name: apiKey
+        prompt: enter API key value
+        private: no
+
+      - name: apiToken
+        prompt: enter API Token value
+        private: no
+
+      - name: env
+        prompt: "Select environment for installation (Default: Development)"
+        default: "development"
+        private: no
+
+
+  tasks:
+      - name: install git
+        yum:
+                name:
+                 - git
+                 - python3            
+                state: present  
+        become: yes
+
+      - name: install poetry              
+        ansible.builtin.shell:
+                chdir: ~/.local/share/pypoetry/venv/bin/
+                creates: poetry
+                cmd: curl -sSL https://install.python-poetry.org | python3 -
+
+      - name: Create app directory
+        ansible.builtin.file:
+                path: /opt/todoapp
+                state: directory
+                owner: ec2-user
+        become: yes
+
+      - name: Checkout git repository
+        ansible.builtin.git:
+                repo: 'https://github.com/Iabo77/DevOps-Course-Starter'
+                dest: /opt/todoapp
+                version: exercise-4
+
+      - name: Poetry Install
+        ansible.builtin.shell: ~/.local/bin/poetry install   
+        args:
+                chdir: /opt/todoapp
+
+      - name: Create .env 
+        ansible.builtin.template:
+                src: .env.j2
+                dest: /opt/todoapp/.env
+
+      - name: Copy todoapp.service file to system directory
+        ansible.builtin.shell: cp /opt/todoapp/deployment/todoapp.service /etc/systemd/system
+        become: yes
+
+      - name: Start todo service
+        ansible.builtin.systemd:
+                name: todoapp
+                daemon_reload: true
+                state: started                
+        become: yes
+      
+
+
+
