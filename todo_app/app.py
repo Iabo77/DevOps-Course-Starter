@@ -3,6 +3,8 @@ from todo_app.flask_config import Config
 from todo_app.data.trello_items import add_item, get_items, complete_item
 from todo_app.data.views import ViewModel
 
+
+
 def create_app():
     app = Flask(__name__)
     app.config.from_object(Config())
@@ -25,3 +27,5 @@ def create_app():
     
     return app
 
+
+app = create_app()
