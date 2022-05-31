@@ -101,18 +101,24 @@ Build dev and production images using dockerfile included in repository by runni
 (ensure that the .env file is created and populated with relevant environmental variables.)
 
 Development:
+```bash
 docker build --target development --tag todo-app:dev .
-
+```
 Production(gunicorn):
+```bash
 docker build --target production --tag todo-app:prod .
-
+```
 Run built images using the following commands:
 
 Development: Bound to localhost port 5000 (localhost:5000 in browser)
+```bash
 docker run  --name todo-app-dev -d  --mount type=bind,source="$(pwd)"/todo_app,target=/app/todo_app -p 5000:5000 --env-file .env todo-app:dev
+```
 
 Live: Bound to localhost port 8000 (localhost:8000 in browser)
+```bash
 docker run  --name todo-app-prod -d -p 8000:8000 --env-file .env todo-app:prod
+```
 
 
 
