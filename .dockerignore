@@ -1,0 +1,8 @@
+.env*
+*.git*
+poetry*
+/deployment
+.vscode
+.venv
+.pytest_cache
+README.md
