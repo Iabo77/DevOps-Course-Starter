@@ -118,3 +118,7 @@ env/
 
 ### Configuration files ###
 .env
+
+## diagram tool temp files
+*.dtmp
+*drawio.bkp
