@@ -7,4 +7,4 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - run: docker build --target test --tag todo-app:test .
-    - run: docker run  --name todo-app-test -d --env-file .env todo-app:test
+    - run: docker run  --name todo-app-test -d -e SECRET_KEY=secret todo-app:test
