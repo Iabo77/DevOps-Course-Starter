@@ -12,7 +12,7 @@ CMD poetry run  gunicorn -w 1 -b 0.0.0.0:8000 app:app
 FROM base as development
 CMD poetry run flask run --host=0.0.0.0
 FROM base as test
-ENTRYPOINT ["poetry", "run", "pytest"]
+CMD poetry run pytest
 
 
 
