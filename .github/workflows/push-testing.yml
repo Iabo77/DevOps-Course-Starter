@@ -6,4 +6,5 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
-    - run: echo Hello World
+    - run: docker build --target test --tag todo-app:test .
+    - run: docker run  --name todo-app-test -d --env-file .env todo-app:test
