@@ -78,9 +78,8 @@ def test_viewmodel_return_todo_cards(card_list, expected):
     returned_items = test_view.todo_items
     assert len(returned_items) == expected
     for item in returned_items:
-        #assert item.status == 'To Do'
-        assert item.status == 'this will fail'
-    
+        assert item.status == 'To Do'
+            
 
 @pytest.mark.parametrize("card_list, expected", [(cards_todo, 0),(cards_doing,0), (cards_done,4), (cards_empty,0), (cards_mixed,6)])
 def test_viewmodel_return_all_done_cards(card_list, expected):
