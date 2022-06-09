@@ -9,4 +9,4 @@ jobs:
     - name: build container
       run: docker build --target test --tag todo-app:test .
     - name: run testing
-      run: docker run  --name todo-app-test -d -e SECRET_KEY=secret todo-app:test
+      run: docker run -e SECRET_KEY=secret todo-app:test
