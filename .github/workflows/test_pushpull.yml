@@ -14,10 +14,6 @@ jobs:
     name: Build and test
     runs-on: ubuntu-latest
     steps:
-    - name: checking variable
-      run: echo "$TEST"
-    - name: checking variable again
-      run: echo "$TESTSECRET"
     - uses: actions/checkout@v2
     - name: build container
       run: docker build --target test --tag todo-app:test .
@@ -29,8 +25,6 @@ jobs:
     runs-on: ubuntu-latest
     needs: build
     steps:
-    - name: push to dockerhub
-      run:  echo ${{ secrets.DOCKERHUB_USERNAME }}
     - name: Login to Docker Hub
       uses: docker/login-action@v2
       with:
