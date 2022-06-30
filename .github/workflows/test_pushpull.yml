@@ -27,10 +27,10 @@ jobs:
         username: ${{ secrets.DOCKER_USER }}
         password: ${{ secrets.DOCKER_TOKEN }}
     - name: Build and push
-        uses: docker/build-push-action@v3
-        with:
-          context: .
-          push: true
-          tags: user/app:latest
+      uses: docker/build-push-action@v3
+      with:
+        context: .
+        push: true
+        tags: user/app:latest
       
     
