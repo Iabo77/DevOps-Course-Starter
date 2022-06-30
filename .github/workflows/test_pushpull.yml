@@ -22,4 +22,4 @@ jobs:
     needs: build
     steps:
     - name: push to dockerhub
-      run: run echo "push"
+      run:  echo "push"
