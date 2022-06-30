@@ -34,7 +34,7 @@ jobs:
       uses: docker/build-push-action@v3
       with:
         context: .
-        tags: iabo/todoapp:test
+        tags: iabo77/todoapp:v1
         push: true
 
     
