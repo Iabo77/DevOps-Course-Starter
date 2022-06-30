@@ -16,6 +16,7 @@ jobs:
     steps:
     - name: checking variable
       run: echo "$TEST"
+    - name: checking variable again
       run: echo $TEST
     - uses: actions/checkout@v2
     - name: build container
