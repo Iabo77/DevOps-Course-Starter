@@ -36,7 +36,7 @@ jobs:
       uses: docker/build-push-action@v3
       with:
         context: .
-        tags: iabo77/todoapp:${{ github.sha }}
+        tags: iabo77/todoapp:${{ github.sha::7 }}
         push: true
 
     
