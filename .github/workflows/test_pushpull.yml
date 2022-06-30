@@ -4,10 +4,6 @@ on:
   push:  
     paths-ignore:
       - '**/README.md'
-
-env: 
-  TEST : "${{ secrets.DOCKER_USER }}"
-  TESTSECRET : ${{ secrets.DOCKER_USER }}
       
 jobs:
   build:
