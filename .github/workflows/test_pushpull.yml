@@ -9,7 +9,7 @@ jobs:
   build:
     name: Build and test
     runs-on: ubuntu-latest
-    steps:
+    steps:    
     - uses: actions/checkout@v2
     - name: build container
       run: docker build --target test --tag todo-app:test .
@@ -34,7 +34,7 @@ jobs:
       uses: docker/build-push-action@v3
       with:
         context: .
-        tags: iabo77/todoapp:${{ secrets.GITHUB_SHA }}
+        tags: iabo77/todoapp:${GITHUB_SHA}
         push: true
 
     
