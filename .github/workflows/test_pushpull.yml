@@ -7,12 +7,16 @@ on:
 
 env: 
   username : ${{ secrets.DOCKERHUB_USERNAME }}
+  TEST : "test"
       
 jobs:
   build:
     name: Build and test
     runs-on: ubuntu-latest
     steps:
+    - name: checking variable
+      run: echo "$TEST"
+      run: echo $TEST
     - uses: actions/checkout@v2
     - name: build container
       run: docker build --target test --tag todo-app:test .
