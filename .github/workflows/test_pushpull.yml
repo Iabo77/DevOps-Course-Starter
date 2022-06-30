@@ -6,8 +6,8 @@ on:
       - '**/README.md'
 
 env: 
-  TEST : "${{ secrets.DOCKERHUB_USERNAME }}"
-  TESTSECRET : ${{ secrets.DOCKERHUB_USERNAME }}
+  TEST : "${{ secrets.DOCKERHUB_USER }}"
+  TESTSECRET : ${{ secrets.DOCKERHUB_USER }}
       
 jobs:
   build:
