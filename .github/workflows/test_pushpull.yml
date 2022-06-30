@@ -6,8 +6,8 @@ on:
       - '**/README.md'
 
 env: 
-  username : ${{ secrets.DOCKERHUB_USERNAME }}
-  TEST : "test"
+  TEST : "${{ secrets.DOCKERHUB_USERNAME }}"
+  TESTSECRET : ${{ secrets.DOCKERHUB_USERNAME }}
       
 jobs:
   build:
@@ -17,7 +17,7 @@ jobs:
     - name: checking variable
       run: echo "$TEST"
     - name: checking variable again
-      run: echo $TEST
+      run: echo "$TESTSECRET"
     - uses: actions/checkout@v2
     - name: build container
       run: docker build --target test --tag todo-app:test .
