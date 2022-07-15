@@ -5,7 +5,7 @@ RUN apt-get update &&\
 ENV PATH="${PATH}:/root/.poetry/bin"
 WORKDIR "/app"
 COPY . . 
-RUN poetry install 
+RUN poetry config virtualenvs.create false --local && poetry install
 FROM base as production
 WORKDIR "/app/todo_app"
 CMD poetry run  gunicorn -w 1 -b 0.0.0.0:8000 app:app
