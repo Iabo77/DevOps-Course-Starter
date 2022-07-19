@@ -2,6 +2,8 @@ name: Continuous Integration
 on: 
   pull_request:
   push:  
+    branches:
+      - exercise-8
     paths-ignore:
       - '**/README.md'
       
