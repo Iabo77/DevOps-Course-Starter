@@ -50,6 +50,7 @@ jobs:
           heroku_api_key: ${{secrets.HEROKU_KEY}}
           heroku_app_name: todoapp-ib-heroku #Must be unique in Heroku
           heroku_email: iboorer@gmail.com
+          branch: exercise-8
           
 
     
