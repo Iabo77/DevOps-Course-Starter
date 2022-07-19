@@ -3,7 +3,7 @@ on:
   pull_request:
   push:  
     branches:
-      - exercise-8
+      - main
     paths-ignore:
       - '**/README.md'
       
