@@ -30,7 +30,6 @@ jobs:
       with: 
         username: ${{ secrets.DOCKER_USER }}
         password: ${{ secrets.DOCKER_TOKEN }}
-
     - name: Build and push Docker images
       uses: docker/build-push-action@v3
       with:
@@ -51,8 +50,7 @@ jobs:
         with:
           heroku_api_key: ${{secrets.HEROKU_KEY}}
           heroku_app_name: todoapp-ib-heroku #Must be unique in Heroku
-          heroku_email: iboorer@gmail.com
-          branch: exercise-8
+          heroku_email: iboorer@gmail.com          
           
 
     
