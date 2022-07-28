@@ -10,9 +10,10 @@ FROM base as development
 CMD poetry run flask run --host=0.0.0.0
 FROM base as test
 CMD poetry run pytest
+# Ensure that 'production' is last stage in dockerfile as CD Guthub action does not allow specifying stage. 
 FROM base as production
 WORKDIR "/app/todo_app"
-CMD poetry run  gunicorn -w 1 -b 0.0.0.0:$PORT app:app
+CMD poetry run  gunicorn -w 1 -b 0.0.0.0:$PORT app:app 
 
 
 
