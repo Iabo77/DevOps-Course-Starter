@@ -120,6 +120,9 @@ Live: Bound to localhost port 8000 (localhost:8000 in browser)
 docker run  --name todo-app-prod -d -p 8000:8000 --env-file .env todo-app:prod
 ```
 
+## Heroku Deployment
+The application is available to access at https://todoapp-ib-heroku.herokuapp.com/
+
 
 
 
