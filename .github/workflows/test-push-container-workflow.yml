@@ -22,7 +22,7 @@ jobs:
     name: Push to DockerHub
     runs-on: ubuntu-latest
     needs: build
-    if: github.ref == 'refs/heads/main'
+    #if: github.ref == 'refs/heads/main'
     steps:
     - name: Checkout
       uses: actions/checkout@v3
@@ -38,21 +38,7 @@ jobs:
         tags: iabo77/todoapp:${{ github.sha }}, iabo77/todoapp:latest
         push: true
         target: production
+    - name: Push to Azure Webhook
+      run: curl -dH -X POST ${{ secrets.AZURE_WEBHOOK_URL }}
 
-  Push-to-Heroku: 
-    name: Push to Heroku
-    runs-on: ubuntu-latest
-    needs: build
-    if: github.ref == 'refs/heads/main'
-    steps:
-      - name: checkout
-        uses: actions/checkout@v3
-      - name: push repo to heroku
-        uses: akhileshns/heroku-deploy@v3.12.12 # This is the action
-        with:
-          heroku_api_key: ${{secrets.HEROKU_KEY}}
-          heroku_app_name: todoapp-ib-heroku #Must be unique in Heroku
-          heroku_email: iboorer@gmail.com          
-          
-
-    
+   
