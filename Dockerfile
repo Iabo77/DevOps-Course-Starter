@@ -2,7 +2,7 @@ FROM python:3.10-slim-buster as base
 RUN apt-get update &&\
     apt-get install curl -y  &&\
     curl -sSL https://install.python-poetry.org | python3 - 
-ENV PATH="${PATH}:/root/.poetry/bin"
+ENV PATH="${PATH}:/root/.local/bin"
 WORKDIR "/app"
 COPY . . 
 RUN poetry config virtualenvs.create false --local && poetry install
