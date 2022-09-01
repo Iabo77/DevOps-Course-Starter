@@ -1,7 +1,7 @@
 FROM python:3.10-slim-buster as base
 RUN apt-get update &&\
     apt-get install curl -y  &&\
-    curl -sSL https://raw.githubusercontent.com/python-poetry/poetry/master/get-poetry.py | python -
+    curl -sSL https://install.python-poetry.org | python3 - 
 ENV PATH="${PATH}:/root/.poetry/bin"
 WORKDIR "/app"
 COPY . . 
@@ -14,7 +14,3 @@ CMD poetry run pytest
 FROM base as production
 WORKDIR "/app/todo_app"
 CMD poetry run  gunicorn -w 1 -b 0.0.0.0:$PORT app:app 
-
-
-
-
