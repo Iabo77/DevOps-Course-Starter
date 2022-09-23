@@ -12,6 +12,7 @@ requests = "^2.27.1"
 pytest = "^7.0.1"
 gunicorn = "^20.1.0"
 MarkupSafe = "2.0.1"
+pymongo = "^4.2.0"
 
 [tool.poetry.dev-dependencies]
 
