@@ -1,6 +1,6 @@
 from flask import Flask, request,  render_template, redirect, url_for
 from todo_app.flask_config import Config
-from todo_app.data.trello_items import add_item, get_items, complete_item
+from todo_app.data.database_items import add_item, get_items, complete_item
 from todo_app.data.views import ViewModel
 
 
@@ -29,3 +29,4 @@ def create_app():
 
 
 app = create_app()
+
