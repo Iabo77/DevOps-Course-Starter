@@ -19,6 +19,8 @@ def client():
     test_app = app.create_app()    
     with test_app.test_client() as client:
         yield client
+        
+     
 
 
 #hardcoded date time values to test datetime logic consistently (for fture stretch testing/functionality)
