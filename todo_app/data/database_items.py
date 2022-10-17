@@ -4,7 +4,7 @@ from flask import session
 #import requests
 import os
 #import json
-from pymongo import MongoClient
+import pymongo
 from bson import ObjectId
 
 
@@ -19,7 +19,10 @@ class Item:
     def from_database(cls, item, status = 'To Do'):
         return cls(str(item['_id']), item['name'], item['status'], item['date_modified'])
 
-collection = MongoClient(os.getenv('CONNECTION_STRING')).todo_app.items
+connectionstring = os.getenv('CONNECTION_STRING')
+client = pymongo.MongoClient(connectionstring)
+database = client[os.getenv('DATABASE')]
+collection = database[os.getenv('COLLECTION')]
 
 def get_items():    
     items = []
@@ -34,5 +37,5 @@ def add_item(title):
         
 
 def complete_item(_id):
-    collection.update_one({'_id': ObjectId(_id)}, {"$set": {"status":"Done"}})
+    collection.update_one({'_id': ObjectId(_id)}, {"$set": {'status':'Done', 'date_modified':datetime.now()}})
     

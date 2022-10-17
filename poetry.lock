@@ -152,6 +152,18 @@ optional = false
 python-versions = ">=3.6"
 
 [[package]]
+name = "mongomock"
+version = "4.1.2"
+description = "Fake pymongo stub for testing simple MongoDB-dependent code"
+category = "main"
+optional = false
+python-versions = "*"
+
+[package.dependencies]
+packaging = "*"
+sentinels = "*"
+
+[[package]]
 name = "packaging"
 version = "21.3"
 description = "Core utilities for Python packages"
@@ -265,6 +277,14 @@ socks = ["PySocks (>=1.5.6,!=1.5.7)", "win-inet-pton"]
 use_chardet_on_py3 = ["chardet (>=3.0.2,<5)"]
 
 [[package]]
+name = "sentinels"
+version = "1.0.0"
+description = "Various objects to denote special meanings in python"
+category = "main"
+optional = false
+python-versions = "*"
+
+[[package]]
 name = "tomli"
 version = "2.0.1"
 description = "A lil' TOML parser"
@@ -320,7 +340,7 @@ testing = ["pytest (>=6)", "pytest-checkdocs (>=2.4)", "pytest-flake8", "pytest-
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.7"
-content-hash = "5a6b561793bd35cb80c74f519a459a3c11eaba09cddf2d1e41c2c39a086ef65a"
+content-hash = "c75c7526aa1fac806cf54ed79e028f47b16f6802bae6896f5d58557be2055ee0"
 
 [metadata.files]
 atomicwrites = []
@@ -337,6 +357,7 @@ iniconfig = []
 itsdangerous = []
 jinja2 = []
 markupsafe = []
+mongomock = []
 packaging = []
 pluggy = []
 py = []
@@ -345,6 +366,7 @@ pyparsing = []
 pytest = []
 python-dotenv = []
 requests = []
+sentinels = []
 tomli = []
 typing-extensions = []
 urllib3 = []
