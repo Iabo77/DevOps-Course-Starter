@@ -3,7 +3,7 @@ import pytest
 from todo_app import app
 from dotenv import load_dotenv, find_dotenv
 from datetime import date, datetime, timedelta
-from todo_app.data.database_items import Item
+from item import Item
 from todo_app.data.views import ViewModel
 import os
 import requests

@@ -1,23 +1,10 @@
 from datetime import datetime, timedelta
 from time import monotonic
 from flask import session
-#import requests
 import os
-#import json
+from item import Item
 import pymongo
 from bson import ObjectId
-
-
-class Item:
-    def __init__(self, id, name, status = 'To Do', date_modified = datetime.now()):
-        self.id = id
-        self.name = name
-        self.status = status
-        self.date_modified = date_modified
-
-    @classmethod
-    def from_database(cls, item, status = 'To Do'):
-        return cls(str(item['_id']), item['name'], item['status'], item['date_modified'])
 
 connectionstring = os.getenv('CONNECTION_STRING')
 client = pymongo.MongoClient(connectionstring)
