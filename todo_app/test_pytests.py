@@ -122,7 +122,7 @@ def get_mongodb_data_stub(url, params):
     return StubResponse(fake_response_data)
 
 def test_database_connectivity(client):
-    mongoclient = pymongo.MongoClient(os.getenv('CONNECTION_STRING'))
+    mongoclient = pymongo.MongoClient('fakemongo.com')
     database = mongoclient[os.getenv('DATABASE')]
     collection = database[os.getenv('COLLECTION')]
     collection.insert_one({'name': 'test item', 'status': 'To Do'})
