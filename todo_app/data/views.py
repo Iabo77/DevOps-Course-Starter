@@ -1,6 +1,7 @@
 from sys import dont_write_bytecode
 import todo_app.data.database_items
 
+
 class ViewModel:
     def __init__(self, items):
         self._items = items
