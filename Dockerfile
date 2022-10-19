@@ -9,7 +9,7 @@ RUN poetry config virtualenvs.create false --local && poetry install
 FROM base as development
 CMD poetry run flask run --host=0.0.0.0
 FROM base as test
-CMD poetry run pytest
+CMD poetry run pytest -rA
 # Ensure that 'production' is last stage in dockerfile as CD Github action does not allow specifying stage. 
 FROM base as production
 WORKDIR "/app/todo_app"
