@@ -122,6 +122,8 @@ def get_mongodb_data_stub(url, params):
     return StubResponse(fake_response_data)
 
 def test_database_connectivity(client):
+    file_path = find_dotenv('.env.test')
+    load_dotenv(file_path, override=True) 
     mongoclient = pymongo.MongoClient('fakemongo.com')
     #mongoclient = pymongo.MongoClient('tst')
     database = mongoclient[os.getenv('DATABASE')]
