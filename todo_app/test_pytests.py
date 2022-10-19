@@ -122,8 +122,9 @@ def get_mongodb_data_stub(url, params):
     return StubResponse(fake_response_data)
 
 def test_database_connectivity(client):
-    mongoclient = pymongo.MongoClient('fakemongo.com')
-    collection = mongoclient.db.collection
+    mongoclient = pymongo.MongoClient(os.getenv('CONNECTION_STRING'))
+    db = mongoclient[os.getenv('DATABASE')]
+    collection = db[os.getenv('COLLECTION')]
     collection.insert_one({'name': 'test item', 'status': 'To Do'})
     items = list(collection.find())
     assert len(items) == 1
