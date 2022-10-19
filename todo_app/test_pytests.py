@@ -14,8 +14,8 @@ from todo_app.data.item import Item
 @pytest.fixture
 def client():
     file_path = find_dotenv('.env.test')
-    load_dotenv(file_path, override=True)
-    
+    load_dotenv(file_path, override=True) 
+            
     with mongomock.patch(servers=(('fakemongo.com', 27017),)):
         test_app = app.create_app()
         with test_app.test_client() as client:
@@ -122,6 +122,8 @@ def get_mongodb_data_stub(url, params):
     return StubResponse(fake_response_data)
 
 def test_database_connectivity(client):
+    file_path = find_dotenv('.env.test')
+    load_dotenv(file_path, override=True)
     client = pymongo.MongoClient(os.getenv('CONNECTION_STRING'))
     database = client[os.getenv('DATABASE')]
     collection = database[os.getenv('COLLECTION')]
