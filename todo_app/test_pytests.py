@@ -102,6 +102,25 @@ def test_viewmodel_return_doing_cards(card_list, expected):
         assert item.status == 'Doing'
 
 
+"""
+def test_index_page(monkeypatch, client):
+# Replace call to requests.get(url) with our own function
+    monkeypatch.setattr(requests, 'get', get_trello_data_stub)
+    response = client.get('/')
+    assert response.status_code == 200
+    assert 'testcard123' in response.data.decode()
+"""
+class StubResponse():
+    def __init__(self, fake_response_data):
+        self.fake_response_data = fake_response_data
+    def json(self):
+        return self.fake_response_data
+
+def get_mongodb_data_stub(url, params):
+    test_board_id = os.environ.get('BOARD_ID')
+
+    return StubResponse(fake_response_data)
+
 def test_database_connectivity(client):
     client = pymongo.MongoClient(os.getenv('CONNECTION_STRING'))
     database = client[os.getenv('DATABASE')]
