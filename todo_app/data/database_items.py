@@ -20,15 +20,13 @@ def get_items():
     database_items = collection.find()
     for item in database_items:
         items.append(Item.from_database(item))        
-    return items
-        
+    return items        
 
 def add_item(title):    
     client = pymongo.MongoClient(os.getenv('CONNECTION_STRING'))
     database = client[os.getenv('DATABASE')]
     collection = database[os.getenv('COLLECTION')] 
-    collection.insert_one({'name':title,'status':'To Do','date_modified':datetime.now()})
-        
+    collection.insert_one({'name':title,'status':'To Do','date_modified':datetime.now()})        
 
 def complete_item(_id):
     client = pymongo.MongoClient(os.getenv('CONNECTION_STRING'))
