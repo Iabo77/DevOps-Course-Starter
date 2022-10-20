@@ -1,5 +1,8 @@
+import ssl
 from sys import dont_write_bytecode
+from this import d
 import todo_app.data.database_items
+import datetime
 
 
 class ViewModel:
@@ -26,7 +29,6 @@ class ViewModel:
                 doing_items.append(item)
         return doing_items
 
-
     @property
     def done_items(self):
         done_items = []
@@ -34,3 +36,14 @@ class ViewModel:
             if item.status == 'Done':
                 done_items.append(item)
         return done_items
+
+    @property
+    def recently_done_items(self):       
+        recently_done_items = []
+        for item in self._items:
+            if item.status == 'Done' and item.date_modified > datetime.datetime.today() - datetime.timedelta(days=7):
+                recently_done_items.append(item)
+        return recently_done_items
+
+
+#and item.date_modified < (datetime.now - datetime.timedelta(days=7)
