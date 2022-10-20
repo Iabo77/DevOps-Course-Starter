@@ -5,7 +5,6 @@ from dotenv import load_dotenv, find_dotenv
 from datetime import date, datetime, timedelta
 from todo_app.data.views import ViewModel
 import os
-import requests
 import mongomock
 import pymongo
 from todo_app.data.item import Item

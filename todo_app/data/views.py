@@ -1,7 +1,6 @@
 import ssl
 from sys import dont_write_bytecode
 from this import d
-import todo_app.data.database_items
 import datetime
 
 

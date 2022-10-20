@@ -7,10 +7,6 @@ from .item import Item
 import pymongo
 from bson import ObjectId
 
-#connectionstring = os.getenv('CONNECTION_STRING')
-#mongoclient = pymongo.MongoClient(connectionstring)
-#database = client[os.getenv('DATABASE')]
-#collection = database[os.getenv('COLLECTION')]
 
 def get_items(): 
     client = pymongo.MongoClient(os.getenv('CONNECTION_STRING'))
