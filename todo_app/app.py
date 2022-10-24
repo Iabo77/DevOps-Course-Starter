@@ -9,7 +9,7 @@ import os
 github_oauth_uri = os.getenv('GITHUB_OAUTH_URL')
 client_id = os.getenv('CLIENT_ID')
 client_secret = os.getenv('CLIENT_SECRET')
-callback_uri = os.getenv('CALLBACK_URI')
+redirect_uri = os.getenv('CALLBACK_URI')
 
 def create_app():
     app = Flask(__name__)
@@ -18,7 +18,7 @@ def create_app():
 
     @login_manager.unauthorized_handler 
     def unauthenticated():
-        return redirect (github_oauth_uri)
+        return redirect(f'https://github.com/login/oauth/authorize?client_id={client_id}&redirect_uri={redirect_uri}')
        
     @login_manager.user_loader 
     def load_user(user_id): 
