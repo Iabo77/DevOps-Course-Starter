@@ -1,5 +1,8 @@
+import ssl
 from sys import dont_write_bytecode
-import todo_app.data.trello_items
+from this import d
+import datetime
+
 
 class ViewModel:
     def __init__(self, items):
@@ -25,7 +28,6 @@ class ViewModel:
                 doing_items.append(item)
         return doing_items
 
-
     @property
     def done_items(self):
         done_items = []
@@ -35,28 +37,12 @@ class ViewModel:
         return done_items
 
     @property
-    def recent_done_items():  
-        
-        recent_done_items = []
-        return recent_done_items
-
-    @property
-    def older_done_items(self):
-        older_done_items = ()
-
-        
-        
-        return older_done_items
-    
-    @property
-    def should_show_all_done(self):
-        if len(self.done_items) > 5:
-            return False
-        else:  
-            return True
+    def recently_done_items(self):       
+        recently_done_items = []
+        for item in self._items:
+            if item.status == 'Done' and item.date_modified > datetime.datetime.today() - datetime.timedelta(days=7):
+                recently_done_items.append(item)
+        return recently_done_items
 
 
-    
-
-    
-
+#and item.date_modified < (datetime.now - datetime.timedelta(days=7)

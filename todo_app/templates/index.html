@@ -27,13 +27,12 @@
         {% for item in view_model.doing_items %}        
       <li>{{item.name}}  {{item.status}}   <a href={{ url_for('make_complete', id = item.id) }}>   complete</a></li>             
         {% endfor %}
-        <h2>Done</h2>
+        <h2>Completed this Week</h2>
       </form> 
       <ul class="list-group mb-4">
-        {% for item in view_model.done_items %}        
-      <li>{{item.name}}   <a href={{ url_for('make_complete', id = item.id) }}>   complete</a></li>             
+        {% for item in view_model.recently_done_items %}        
+      <li>{{item.name}} </li>             
         {% endfor %}
-
      </ul>   
     </div>
   </div>

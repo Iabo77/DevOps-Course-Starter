@@ -3,21 +3,27 @@ import pytest
 from todo_app import app
 from dotenv import load_dotenv, find_dotenv
 from datetime import date, datetime, timedelta
-from todo_app.data.trello_items import *
 from todo_app.data.views import ViewModel
 import os
-import requests
+import mongomock
+import pymongo
+from todo_app.data.item import Item
+from todo_app.data.database_items import complete_item, get_items, add_item
 
 
 @pytest.fixture
 def client():
-    #Use our test integration config instead of the 'real' version
     file_path = find_dotenv('.env.test')
-    load_dotenv(file_path, override=True)
-    set_global_env_variables()   # function required to overide env variables loaded with file
-    test_app = app.create_app()    
-    with test_app.test_client() as client:
-        yield client
+    load_dotenv(file_path, override=True) 
+            
+    with mongomock.patch(servers=(('fakemongo.com', 27017),)):
+        mongoclient = pymongo.MongoClient(os.getenv('CONNECTION_STRING'))
+        db = mongoclient[os.getenv('DATABASE')]
+        collection = db[os.getenv('COLLECTION')]
+        collection.insert_one({'name': 'test item #222', 'status': 'To Do',  'date_modified' : datetime.now()})
+        test_app = app.create_app()
+        with test_app.test_client() as client:
+            yield client   
 
 
 #hardcoded date time values to test datetime logic consistently (for fture stretch testing/functionality)
@@ -64,7 +70,6 @@ cards_mixed = (
 
 cards_empty = ()
 
-
 @pytest.mark.parametrize("card_list, expected", [(cards_todo, 4),(cards_doing,4), (cards_done,4), (cards_empty,0), (cards_mixed,12)])
 def test_viewmodel_return_all_open_cards(card_list, expected):
     test_view = ViewModel(card_list)
@@ -98,69 +103,12 @@ def test_viewmodel_return_doing_cards(card_list, expected):
         assert item.status == 'Doing'
 
 
+def test_getitems_from_database(client):    
+    items = get_items()
+    assert len(items) == 1
+    assert items[0].name == 'test item #222'
 
-def test_index_page(monkeypatch, client):
-# Replace call to requests.get(url) with our own function
-    monkeypatch.setattr(requests, 'get', get_trello_data_stub)
-    response = client.get('/')
-    assert response.status_code == 200
-    assert 'testcard123' in response.data.decode()
-    
-class StubResponse():
-    def __init__(self, fake_response_data):
-        self.fake_response_data = fake_response_data
-    def json(self):
-        return self.fake_response_data
-
-def get_trello_data_stub(url, params):
-    test_board_id = os.environ.get('BOARD_ID')
-    fake_response_data = []
-    if url == f'https://api.trello.com/1/boards/{test_board_id}/lists':
-        fake_response_data = [{
-        'id': '123abc',
-        'name': 'To Do'
-        }]
-    elif url == f'https://api.trello.com/1/boards/{test_board_id}/cards':
-        fake_response_data = [{
-        'idList': '123abc',
-        'name': 'testcard123',
-        'id' : '12345',
-        'dateLastActivity' : date_today
-        }]     
-    return StubResponse(fake_response_data)
-
-
-"""
-@pytest.mark.parametrize("card_list, expected", [(cards_todo, 0),(cards_doing,0), (cards_done,1), (cards_empty,0), (cards_mixed,2)])
-def test_viewmodel_return_completed_today(card_list, expected):
-    test_view = ViewModel(card_list)
-    returned_items = test_view.doing_items
-    assert len(returned_items) == expected
-    for item in returned_items:
-        assert item.status == 'Done'
-        assert item.date_modified.date() == datetime.now.date()
-
-
-@pytest.mark.parametrize("card_list, expected", [(cards_todo, 0),(cards_doing,0), (cards_done,3), (cards_empty,0), (cards_mixed,4)])
-def test_viewmodel_return_completed_before_today(card_list, expected):
-    test_view = ViewModel(card_list)
-    returned_items = test_view.older_done_items
-    assert len(returned_items) == expected
-    for item in returned_items:
-        assert item.status == 'Done' 
-        assert item.date_modified.date() == datetime.now.date()       
-
-
-@pytest.mark.parametrize("card_list, expected", [(cards_todo, True),(cards_doing, True), (cards_done, True), (cards_empty, True), (cards_mixed,False)])
-def test_should_show_all_done_items(card_list, expected):
-    test_view = ViewModel(card_list)
-    assert test_view.should_show_all_done == expected
-
-"""
-
-        
-
-
-
-
-
+def test_additem_to_database(client):
+    add_item('Testcall 2')
+    items = get_items()
+    assert len(items) == 2 #  record added from fixture  + new item = 2
