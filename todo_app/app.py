@@ -31,9 +31,7 @@ def create_app():
         user = User(user_id)
         return user
 
-
-    login_manager.init_app(app)
-    
+    login_manager.init_app(app)    
     
     @app.route('/')
     @login_required
@@ -41,14 +39,16 @@ def create_app():
         item_view_model = ViewModel(get_items())
         return render_template('index.html', view_model = item_view_model)
         
-    @login_required
+    
     @app.route ('/additem', methods = ['POST'])
+    @login_required
     def add_todo():
         add_item(request.form["addtask"])
         return redirect('/')
 
-    @login_required
+    
     @app.route ('/completeitem/<id>')
+    @login_required
     def make_complete(id):
         complete_item(id)
         return redirect('/')
@@ -60,7 +60,6 @@ def create_app():
         response = requests.get(token_url, params=params, headers={"Accept": "application/json"}) 
         access_token = response.json().get('access_token')
         userinfo_response = requests.get("https://api.github.com/user",headers={"Authorization": f"Bearer {access_token}"})
-        #user_id = userinfo_response.json().get('id')
         user = User(userinfo_response.json().get('id'))
         login_user(user)
         return redirect('/')
