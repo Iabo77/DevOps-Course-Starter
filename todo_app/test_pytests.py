@@ -1,5 +1,6 @@
 from re import A
 import pytest
+from requests import request
 from todo_app import app
 from dotenv import load_dotenv, find_dotenv
 from datetime import date, datetime, timedelta
@@ -14,14 +15,14 @@ from todo_app.data.database_items import complete_item, get_items, add_item
 @pytest.fixture
 def client():
     file_path = find_dotenv('.env.test')
-    load_dotenv(file_path, override=True) 
-            
+    load_dotenv(file_path, override=True)             
     with mongomock.patch(servers=(('fakemongo.com', 27017),)):
         mongoclient = pymongo.MongoClient(os.getenv('CONNECTION_STRING'))
         db = mongoclient[os.getenv('DATABASE')]
-        collection = db[os.getenv('COLLECTION')]
-        collection.insert_one({'name': 'test item #222', 'status': 'To Do',  'date_modified' : datetime.now()})
+        collection = db[os.getenv('COLLECTION')]        
+        collection.insert_one({'name': 'test item #222', 'status': 'To Do',  'date_modified' : datetime.now()})               
         test_app = app.create_app()
+        test_app.config['LOGIN_DISABLED'] = True 
         with test_app.test_client() as client:
             yield client   
 
@@ -113,4 +114,9 @@ def test_additem_to_database(client):
     items = get_items()
     assert len(items) == 2 #  record added from fixture  + new item = 2
 
+def test_index_page(client):
+    response = client.get('/')
+    assert response.status_code == 200
+    assert 'test item #222' in response.data.decode()
+    
 
