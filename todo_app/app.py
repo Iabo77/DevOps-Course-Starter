@@ -59,14 +59,14 @@ def create_app():
     
     @app.route ('/additem', methods = ['POST'])
     @admin_only
-    #@login_required
+    @login_required
     def add_todo():
         add_item(request.form["addtask"])
         return redirect('/')
     
     @app.route ('/completeitem/<id>')
     @admin_only
-    #@login_required
+    @login_required
     def make_complete(id):
         complete_item(id)
         return redirect('/')
