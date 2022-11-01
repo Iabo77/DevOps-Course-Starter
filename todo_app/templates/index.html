@@ -1,31 +1,37 @@
 {% extends "layout.html" %}
-{% block title %}To-Do App{% endblock %}
+{% block title %}To-Do App {% endblock %}
 
 {% block content %}
   <div class="jumbotron">
-    <h1 class="display-4">To-Do App</h1>
+    <h1 class="display-4">To-Do App  </h1>
     <p class="lead">Just another to-do app.</p>
+    {% if not is_admin %} 
+    <p> Read Only Mode</p> 
+    {% endif %} 
   </div>
 
   <div class="row">
     <div class="col-md-12">
+      {% if is_admin %}
         <form action="/additem" method="post">
         <p>
         <label for="/">To do:</label>
         <input type="text" name="addtask">
         <input name="Submit" type="submit">
-        </p>
-        <h2>To Do</h2>
-        </form>
+        </p>        
+        </form>        
+      {% endif %}
+      
       <ul class="list-group mb-4">
+        <h2>To Do</h2>
         {% for item in view_model.todo_items %}        
-      <li>{{item.name}}   <a href={{ url_for('make_complete', id = item.id) }}>   complete</a></li>             
+      <li>{{item.name}} {% if is_admin %} <a href={{ url_for('make_complete', id = item.id) }}>   complete {% endif %} </a></li>             
         {% endfor %}
         <h2>Doing</h2>
       </form>
       <ul class="list-group mb-4">
         {% for item in view_model.doing_items %}        
-      <li>{{item.name}}  {{item.status}}   <a href={{ url_for('make_complete', id = item.id) }}>   complete</a></li>             
+      <li>{{item.name}}   <a href={{ url_for('make_complete', id = item.id) }}>   complete</a></li>             
         {% endfor %}
         <h2>Completed this Week</h2>
       </form> 

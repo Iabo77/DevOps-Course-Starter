@@ -57,7 +57,7 @@ Now visit [`http://localhost:5000/`](http://localhost:5000/) in your web browser
 
 ## Testing
 
-There are unit tests to check correct data is returned from the viewmodel properties and an integration test to check the index.html data is populated with expected data using mocked json data for both list and card trello API
+There are unit tests to check correct data is returned from the viewmodel properties as well as tests for database reading and writing. and an integration test to check the index.html data is populated using mockmongo data
 
 To run pytests from command line 
 poetry run pytest -rA 
@@ -97,7 +97,8 @@ Development: Bound to localhost port 5000 (localhost:5000 in browser)
 docker run  --name todo-app-dev -d  --mount type=bind,source="$(pwd)"/todo_app,target=/app/todo_app -p 5000:5000 --env-file .env todo-app:dev
 ```
 
-Live: Bound to localhost port 8000 (localhost:8000 in browser)```bash
+Live: Bound to localhost port 8000 (localhost:8000 in browser)
+```bash
 docker run  --name todo-app-prod -d -p 8000:8000 --env-file .env todo-app:prod
 ```
 
@@ -106,5 +107,18 @@ The application will be pushed via the Github action pipeline to Azure Web App a
 https://todo-app-ib.azurewebsites.net/
 
 
+## Authorisation and Access
+
+OAuth configuration is in place to restrict access to only users authenticated. Attempts to access the App will be redirected to the GitHib login page.
+
+There are currently two levels of access restrictions  
++ Reader
++ Writer
+
+By default authenticated users will be provided Reader (read only rights). Administrator rights are currently hard coded to a single user account. 
+
+### Testing / demo of access rights
+To elevate rights for testing/demo purposes add your UserID to the administrators variable list in app.py.  
+You used ID can be established by browsing the /PrivilegeError endpoint (once you are logged in, else no ID will be returned)
 
 
