@@ -12,7 +12,7 @@ client_secret = os.getenv('CLIENT_SECRET')
 redirect_uri = os.getenv('REDIRECT_URI')
 token_url = 'https://github.com/login/oauth/access_token'
 
-administrators = ['94004011'] # list of admin userIds. hardcoded for demo/testing purposes. 
+administrators = ['94004061'] # list of admin userIds. hardcoded for demo/testing purposes. 
 
 class User(UserMixin): 
     def __init__(self, id):
