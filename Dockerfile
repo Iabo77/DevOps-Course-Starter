@@ -13,4 +13,4 @@ CMD poetry run pytest -rA
 # Ensure that 'production' is last stage in dockerfile as CD Github action does not allow specifying stage. 
 FROM base as production
 WORKDIR "/app/todo_app"
-CMD poetry run  gunicorn -w 1 -b 0.0.0.0:$PORT app:app 
+CMD poetry run  gunicorn -w 1 -b 0.0.0.0:$PORT app:create_app()
