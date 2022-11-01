@@ -16,7 +16,7 @@ jobs:
     - name: build container
       run: docker build --target test --tag todo-app:test .
     - name: run testing
-      run: docker run -e  todo-app:test
+      run: docker run todo-app:test
   
   Push-to-docker-And-Azure:
     name: Push to DockerHub & Azure

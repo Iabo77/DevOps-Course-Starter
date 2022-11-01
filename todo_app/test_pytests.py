@@ -21,10 +21,8 @@ def client():
         db = mongoclient[os.getenv('DATABASE')]
         collection = db[os.getenv('COLLECTION')]        
         collection.insert_one({'name': 'test item #222', 'status': 'To Do',  'date_modified' : datetime.now()})    
-        
         test_app = app.create_app()
-        test_app.config['LOGIN_DISABLED'] = True 
-        test_app.secret_key = os.getenv('SECRET_KEY')
+        test_app.config['LOGIN_DISABLED'] = True
         with test_app.test_client() as client:
             yield client   
 
