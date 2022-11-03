@@ -16,10 +16,10 @@ jobs:
     - name: build container
       run: docker build --target test --tag todo-app:test .
     - name: run testing
-      run: docker run -e SECRET_KEY=secret todo-app:test
+      run: docker run todo-app:test
   
-  Push-to-docker:
-    name: Push to DockerHub
+  Push-to-docker-And-Azure:
+    name: Push to DockerHub & Azure
     runs-on: ubuntu-latest
     needs: build
     if: github.ref == 'refs/heads/main'

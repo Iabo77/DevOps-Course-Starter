@@ -1,8 +1,6 @@
 import ssl
 from sys import dont_write_bytecode
-from this import d
 import datetime
-
 
 class ViewModel:
     def __init__(self, items):
