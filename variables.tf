@@ -3,6 +3,16 @@ variable "prefix" {
     default = "ibtf"
     }
 
+variable "RESOURCE_GROUP_NAME" {
+    type = string
+    default = "OpenCohort21_IanBoorer_ProjectExercise"
+}
+
+variable "STORAGE_ACCOUNT_NAME" {
+    type = string
+    default = "tfstate10ibtf"
+}
+
 variable "CLIENT_ID" {
     type = string
     sensitive = true
