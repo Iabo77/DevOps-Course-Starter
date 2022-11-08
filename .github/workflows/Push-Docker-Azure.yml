@@ -22,7 +22,7 @@ jobs:
     name: Push to DockerHub & Azure
     runs-on: ubuntu-latest
     needs: build
-    if: github.ref == 'refs/heads/main'
+    #if: github.ref == 'refs/heads/main'
     steps:
     - name: Checkout
       uses: actions/checkout@v3
@@ -38,6 +38,24 @@ jobs:
         tags: iabo77/todoapp:${{ github.sha }}, iabo77/todoapp:latest
         push: true
         target: production
+   - name: Initialize Terraform
+        run: terraform init -input=false
+   - name: Terraform Plan           
+      env:
+        TF_VAR_DOCKER_REGISTRY_SERVER_USERNAME: ${{ secrets.DOCKER_USER}}
+        TF_VAR_DOCKER_REGISTRY_SERVER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+        TF_VAR_CLIENT_ID: ${{ secrets.CLIENT_ID }}
+        TF_VAR_CLIENT_SECRET: ${{ secrets.CLIENT_SECRET }}
+        TF_VAR_SECRET_KEY: ${{ secrets.SECRET_KEY }}
+        TF_VAR_FLASK_APP: ${{ secrets.FLASK_APP}}
+        TF_VAR_FLASK_ENV: ${{ secrets.FLASK_ENV }}
+        TF_VAR_ARM_CLIENTID: ${{ secrets.ARM_CLIENTID }}
+        TF_VAR_ARM_CLIENT_SECRET: ${{ secrets.ARM_CLIENT_SECRET }}
+        TF_VAR_ARM_TENANT_ID: ${{ secrets.ARM_TENANT_ID }}
+        TF_VAR_ARM_SUBSCRIPTION_ID: ${{ secrets.ARM_SUBSCRIPTION_ID }}
+      run: terraform plan -auto-approve -input=false
+      
+      
     - name: Push to Azure Webhook
       run: curl -dH -X POST ${{ secrets.AZURE_WEBHOOK_URL }}
 
