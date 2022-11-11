@@ -50,9 +50,14 @@ jobs:
     #- name: logon to Azure
       #run: az login --service-principal -u ${{ secrets.ARM_CLIENTID}} -p ${{ secrets.ARM_CLIENT_SECRET}} --tenant ${{ secrets.ARM_CLIENT_TENANT_ID}}
     - name: Initialize Terraform
-      run: terraform init -input=false
-    - name: Terraform Plan           
       env:
+        ARM_CLIENT_ID: ${{ secrets.ARM_CLIENTID }}
+        ARM_CLIENT_SECRET: ${{ secrets.ARM_CLIENT_SECRET }}
+        ARM_TENANT_ID: ${{ secrets.ARM_TENANT_ID }}
+        ARM_SUBSCRIPTION_ID: ${{ secrets.ARM_SUBSCRIPTION_ID }}
+      run: terraform init -input=false
+    - name: Terraform Plan   
+      env:         
         TF_VAR_DOCKER_REGISTRY_SERVER_USERNAME: ${{ secrets.DOCKER_USER}}
         TF_VAR_DOCKER_REGISTRY_SERVER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
         TF_VAR_CLIENT_ID: ${{ secrets.CLIENT_ID }}
@@ -60,10 +65,6 @@ jobs:
         TF_VAR_SECRET_KEY: ${{ secrets.SECRET_KEY }}
         TF_VAR_FLASK_APP: ${{ secrets.FLASK_APP}}
         TF_VAR_FLASK_ENV: ${{ secrets.FLASK_ENV }}
-        TF_VAR_ARM_CLIENTID: ${{ secrets.ARM_CLIENTID }}
-        TF_VAR_ARM_CLIENT_SECRET: ${{ secrets.ARM_CLIENT_SECRET }}
-        TF_VAR_ARM_TENANT_ID: ${{ secrets.ARM_TENANT_ID }}
-        TF_VAR_ARM_SUBSCRIPTION_ID: ${{ secrets.ARM_SUBSCRIPTION_ID }}
         TF_VAR_DOCKER_IMAGE: ${{ secrets.DOCKER_IMAGE }}
       run: terraform plan -input=false -auto-approve
     - name: Push to Azure Webhook
