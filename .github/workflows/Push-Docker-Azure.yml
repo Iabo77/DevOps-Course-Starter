@@ -69,6 +69,7 @@ jobs:
         ARM_SUBSCRIPTION_ID: ${{ secrets.ARM_SUBSCRIPTION_ID }} 
       run: terraform apply -input=false -auto-approve
     - name: Push to Azure Webhook
-      run: curl -dH -X POST ${{ secrets.AZURE_WEBHOOK_URL }}
+      run:  curl -dH -X POST "$(terraform output -raw Webhook_URL)"
+      #run: curl -dH -X POST ${{ secrets.AZURE_WEBHOOK_URL }}
 
    
