@@ -4,24 +4,19 @@ terraform {
     azurerm = {
       source  = "hashicorp/azurerm"
       version = "=3.0.0"
-    }
-  }
-}
-
-# Configure the Microsoft Azure Provider
-provider "azurerm" {
-  features {}
-}
+    }  
 
    backend "azurerm" {
         resource_group_name  = "OpenCohort21_IanBoorer_ProjectExercise"
         storage_account_name = "tfstate10ibtf"
         container_name       = "tfstate"
         key                  = "terraform.tfstate"
-    }
-  
+    }  
 }
 
+provider "azurerm" {
+  features {}
+}
 
 data "azurerm_resource_group" "main" {
   name = "OpenCohort21_IanBoorer_ProjectExercise"
