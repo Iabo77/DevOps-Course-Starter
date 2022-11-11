@@ -52,10 +52,10 @@ jobs:
     - name: Initialize Terraform
       env:
         client_id: ${{ secrets.ARM_CLIENTID }}
-        cient_secret: ${{ secrets.ARM_CLIENT_SECRET }}
-        tenant_id: ${{ secrets.ARM_TENANT_ID }}
+        client_secret: ${{ secrets.ARM_CLIENT_SECRET }}
+        tenant_id: ${{ secrets.ARM_CLIENT_TENANT_ID }}
         subscription_id: ${{ secrets.ARM_SUBSCRIPTION_ID }} 
-      run: az account show #terraform init -input=false
+      run: terraform init -input=false
     - name: Terraform Plan   
       env:         
         TF_VAR_DOCKER_REGISTRY_SERVER_USERNAME: ${{ secrets.DOCKER_USER}}
