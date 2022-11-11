@@ -102,9 +102,8 @@ Live: Bound to localhost port 8000 (localhost:8000 in browser)
 docker run  --name todo-app-prod -d -p 8000:8000 --env-file .env todo-app:prod
 ```
 
-## Azure WebApp deployment
-The application will be pushed via the Github action pipeline to Azure Web App available on
-https://todo-app-ib.azurewebsites.net/
+## Terraform Deployment
+As part of CI/CD pipeline Azure infrastructure is automatically provisioned via the supplied terraform configuration files. 
 
 
 ## Authorisation and Access
