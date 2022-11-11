@@ -48,7 +48,7 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v3
     - name: logon to Azure
-      run: az login --service-principal -u ${{ secrets.ARM_CLIENTID}} -p ${{ secrets.ARM_CLIENT_SECRET}} --tenant ${{ secrets.ARM_CLIENT_TENANT_ID}}
+      #run: az login --service-principal -u ${{ secrets.ARM_CLIENTID}} -p ${{ secrets.ARM_CLIENT_SECRET}} --tenant ${{ secrets.ARM_CLIENT_TENANT_ID}}
     - name: Initialize Terraform
       run: terraform init -input=false
     - name: Terraform Plan           
