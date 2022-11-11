@@ -24,24 +24,6 @@ variable "CLIENT_SECRET" {
 
 }
 
-variable "GITHUB_OAUTH_URL" {
-    type = string
-    sensitive = true
-
-}
-
-
-variable "COLLECTION" {
-    type = string
-    sensitive = true
-}
-
-variable "DATABASE" {
-    type = string
-    sensitive = true
-
-}
-
 variable "SECRET_KEY" {
     type = string
     sensitive = true
@@ -66,11 +48,6 @@ variable "DOCKER_IMAGE" {
 
 }
 
-variable "DOCKER_REGISTRY_SERVER_URL" {
-    type = string
-    sensitive = true
-
-}
 
 variable "DOCKER_REGISTRY_SERVER_USERNAME" {
     type = string
