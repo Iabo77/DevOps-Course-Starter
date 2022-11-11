@@ -18,10 +18,6 @@ terraform {
 
 provider "azurerm" {
   features {}
-  subscription_id = "${var.FLASK_APP}"
-  tenant_id = "${var.FLASK_APP}"
-  client_id = "${var.FLASK_APP}"
-  client_secret = "${var.FLASK_APP}"
 
 }
 
