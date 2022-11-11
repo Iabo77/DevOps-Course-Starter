@@ -51,10 +51,10 @@ jobs:
       #run: az login --service-principal -u ${{ secrets.ARM_CLIENTID}} -p ${{ secrets.ARM_CLIENT_SECRET}} --tenant ${{ secrets.ARM_CLIENT_TENANT_ID}}
     - name: Initialize Terraform
       env:
-        client_id: ${{ secrets.ARM_CLIENTID }}
-        client_secret: ${{ secrets.ARM_CLIENT_SECRET }}
-        tenant_id: ${{ secrets.ARM_CLIENT_TENANT_ID }}
-        subscription_id: ${{ secrets.ARM_SUBSCRIPTION_ID }} 
+        ARM_CLIENT_ID: ${{ secrets.ARM_CLIENTID }}
+        ARM_CLIENT_SECRET: ${{ secrets.ARM_CLIENT_SECRET }}
+        ARM_TENANT_ID: ${{ secrets.ARM_CLIENT_TENANT_ID }}
+        ARM_SUBSCRIPTION_ID: ${{ secrets.ARM_SUBSCRIPTION_ID }} 
       run: terraform init -input=false
     - name: Terraform Plan   
       env:         
