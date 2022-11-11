@@ -55,6 +55,7 @@ jobs:
         cient_secret: ${{ secrets.ARM_CLIENT_SECRET }}
         tenant_id: ${{ secrets.ARM_TENANT_ID }}
         subscription_id: ${{ secrets.ARM_SUBSCRIPTION_ID }}
+      run: az account show
       run: terraform init -input=false
     - name: Terraform Plan   
       env:         
