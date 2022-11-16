@@ -4,11 +4,24 @@ on:
   push:  
     paths-ignore:
       - '**/README.md'
+env:         
+  TF_VAR_DOCKER_REGISTRY_SERVER_USERNAME: ${{ secrets.DOCKER_USER}}
+  TF_VAR_DOCKER_REGISTRY_SERVER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+  TF_VAR_CLIENT_ID: ${{ secrets.CLIENT_ID }}
+  TF_VAR_CLIENT_SECRET: ${{ secrets.CLIENT_SECRET }}
+  TF_VAR_SECRET_KEY: ${{ secrets.SECRET_KEY }}
+  TF_VAR_FLASK_APP: ${{ secrets.FLASK_APP}}
+  TF_VAR_FLASK_ENV: ${{ secrets.FLASK_ENV }}
+  TF_VAR_DOCKER_IMAGE: ${{ secrets.DOCKER_IMAGE }}
+  ARM_CLIENT_ID: ${{ secrets.ARM_CLIENTID }}
+  ARM_CLIENT_SECRET: ${{ secrets.ARM_CLIENT_SECRET }}
+  ARM_TENANT_ID: ${{ secrets.ARM_CLIENT_TENANT_ID }}
+  ARM_SUBSCRIPTION_ID: ${{ secrets.ARM_SUBSCRIPTION_ID }} 
       
 jobs:
   build:
     name: Build and test
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-latest    
     steps:    
     - name: Branch output
       run: echo ${{ github.ref }}
@@ -18,8 +31,8 @@ jobs:
     - name: run testing
       run: docker run todo-app:test
   
-  Push-to-docker-And-Azure:
-    name: Push to DockerHub & Azure
+  Push-to-Docker:
+    name: Push to DockerHub
     runs-on: ubuntu-latest
     needs: build
     if: github.ref == 'refs/heads/main'
@@ -38,7 +51,20 @@ jobs:
         tags: iabo77/todoapp:${{ github.sha }}, iabo77/todoapp:latest
         push: true
         target: production
+
+  Deploy-to-Azure:
+    name: Deploy to Azure
+    runs-on: ubuntu-latest
+    needs: Push-to-Docker
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v3
+    - name: Initialize Terraform
+      run: terraform init -input=false
+    - name: Terraform Deploy   
+      run: terraform apply -input=false -auto-approve
     - name: Push to Azure Webhook
-      run: curl -dH -X POST ${{ secrets.AZURE_WEBHOOK_URL }}
+      run:  curl -dH -X POST "$(terraform output -raw Webhook_URL)"
+
 
    
