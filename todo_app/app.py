@@ -38,7 +38,7 @@ def create_app():
 
     @login_manager.unauthorized_handler 
     def unauthenticated():
-        app.logger.debug ('unauthenticated access -  being redirected to Github')
+        app.logger.debug ('unauthenticated access  -  being redirected to Github')
         return redirect(f'https://github.com/login/oauth/authorize?client_id={client_id}&redirect_uri={redirect_uri}')
        
     @login_manager.user_loader 
@@ -53,7 +53,6 @@ def create_app():
     def index():           
         item_view_model = ViewModel(get_items())
         is_admin = True
-        app.logger.debug(f'is admin check:  complete_Authentication :: current_user = {current_user.id}: {type(current_user.id)}, admins: {administrators}: {type(administrators[0])} ')
         try:
             is_admin = current_user.id in administrators            
         except AttributeError: # to handle attributeerror when running tests (anonymous user has no 'id' attribute)
@@ -80,7 +79,8 @@ def create_app():
             
     @app.route ('/AccessDenied')
     def access_denied(): 
-        #  Currently Supplies userid of logged in user, solely for ease of testing/demo purposes.        
+        #  Currently Supplies userid of logged in user, solely for ease of testing/demo purposes. 
+        app.logger.warning('Terminated at AccessDenied')       
         try:
             return (f'Access Denied. User ID = {current_user.id}')
         except:
@@ -99,7 +99,7 @@ def create_app():
         login_user(user)
         if current_user.get_id() == 'None':
             # Occurs if user rejects OAuth logon/permissions or uses invalid access token
-            app.logger.info ('Rejected OAuth logon attempt')
+            app.logger.warning ('Rejected OAuth logon attempt')
             return redirect ('/AccessDenied')
         else:
             if current_user.get_id() in administrators:

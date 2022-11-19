@@ -6,6 +6,7 @@ import os
 from .item import Item
 import pymongo
 from bson import ObjectId
+import logging
 
 
 def get_items(): 
@@ -15,7 +16,8 @@ def get_items():
     items = []
     database_items = collection.find()
     for item in database_items:
-        items.append(Item.from_database(item))        
+        items.append(Item.from_database(item))   
+    logging.debug(f'{len(items)} items loaded from db')     
     return items        
 
 def add_item(title):    

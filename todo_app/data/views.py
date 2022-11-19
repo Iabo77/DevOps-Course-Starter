@@ -1,6 +1,7 @@
 import ssl
 from sys import dont_write_bytecode
 import datetime
+import logging
 
 class ViewModel:
     def __init__(self, items):
@@ -37,10 +38,11 @@ class ViewModel:
     @property
     def recently_done_items(self):       
         recently_done_items = []
+        starting_date = datetime.datetime.today() - datetime.timedelta(days=7)        
         for item in self._items:
             if item.status == 'Done' and item.date_modified > datetime.datetime.today() - datetime.timedelta(days=7):
                 recently_done_items.append(item)
+        logging.debug(f'Filtered:  {len(recently_done_items)} items completed in week period from date :  {starting_date}')
         return recently_done_items
 
 
-#and item.date_modified < (datetime.now - datetime.timedelta(days=7)
