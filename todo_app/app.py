@@ -1,11 +1,15 @@
+import os
 from flask import Flask, request,  render_template, redirect, url_for
 from todo_app.flask_config import Config
 from todo_app.data.database_items import add_item, get_items, complete_item
 from todo_app.data.views import ViewModel
 from flask_login import LoginManager, UserMixin, current_user, login_required, login_user
 import requests
-import os
 import logging
+
+logging.basicConfig()
+logger = logging.getLogger(__name__)
+logger.setLevel(os.getenv('LOG_LEVEL'))
 
 github_oauth_uri = os.getenv('GITHUB_OAUTH_URL')
 client_id = os.getenv('CLIENT_ID')
@@ -26,7 +30,7 @@ def admin_only(func):
         elif current_user.is_anonymous: # testing uses anonymous_user
             return func(*args,**kwargs)
         else:
-            logging.warning('Unauthorised Access attempted')
+            logger.warning('Unauthorised Access attempted')
             return redirect('/AccessDenied')
     wrapper.__name__ = func.__name__
     return wrapper
@@ -34,8 +38,11 @@ def admin_only(func):
 def create_app():
     app = Flask(__name__)
     app.config.from_object(Config())
+    app.logger.setLevel(os.getenv('LOG_LEVEL'))
+    if logger.getEffectiveLevel() == 10:
+        app.logger.warning(f'Starting app with log level: {logging.getLevelName(logger.level)}: {logger.getEffectiveLevel()}')
+        
     login_manager = LoginManager()
-
     @login_manager.unauthorized_handler 
     def unauthenticated():
         app.logger.debug ('unauthenticated access  -  being redirected to Github')
@@ -65,7 +72,7 @@ def create_app():
     @login_required
     def add_todo():
         add_item(request.form["addtask"])
-        app.logger.debug(f'Task added. Task: {request.form["addtask"]} Userid: {current_user.id}')
+        app.logger.info(f'Task added. Task: {request.form["addtask"]} Userid: {current_user.id}')
         return redirect('/')
     
     @app.route ('/completeitem/<id>')
@@ -73,14 +80,14 @@ def create_app():
     @login_required
     def make_complete(id):
         complete_item(id) 
-        app.logger.debug(f'Task completed. TaskID {id} Userid: {current_user.id}')           
+        app.logger.info(f'Task completed. TaskID {id} Userid: {current_user.id}')           
         return redirect('/')
           
             
     @app.route ('/AccessDenied')
     def access_denied(): 
         #  Currently Supplies userid of logged in user, solely for ease of testing/demo purposes. 
-        app.logger.warning('Terminated at AccessDenied')       
+        app.logger.warning('Access attempt Terminated at AccessDenied page')       
         try:
             return (f'Access Denied. User ID = {current_user.id}')
         except:
@@ -103,7 +110,7 @@ def create_app():
             return redirect ('/AccessDenied')
         else:
             if current_user.get_id() in administrators:
-                app.logger.info(f'User {current_user.id} logged in as administrator')
+                app.logger.info(f'User {current_user.id} logged in with full read/write')
             else:
                 app.logger.info(f'User {current_user.id} logged in with read only access')
             return redirect('/')

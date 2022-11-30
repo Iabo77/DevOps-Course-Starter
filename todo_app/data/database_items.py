@@ -9,6 +9,11 @@ from bson import ObjectId
 import logging
 
 
+logging.basicConfig()
+logger = logging.getLogger(__name__)
+logger.setLevel(os.getenv('LOG_LEVEL'))
+
+
 def get_items(): 
     client = pymongo.MongoClient(os.getenv('CONNECTION_STRING'))
     database = client[os.getenv('DATABASE')]
@@ -17,7 +22,7 @@ def get_items():
     database_items = collection.find()
     for item in database_items:
         items.append(Item.from_database(item))   
-    logging.debug(f'{len(items)} items loaded from db')     
+    logger.debug(f"{len(items)} individual items collected from {collection.count_documents({})} total database records:## Item count and record count should match ##")    
     return items        
 
 def add_item(title):    

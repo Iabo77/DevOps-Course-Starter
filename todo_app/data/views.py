@@ -2,6 +2,11 @@ import ssl
 from sys import dont_write_bytecode
 import datetime
 import logging
+import os
+
+logging.basicConfig()
+logger = logging.getLogger(__name__)
+logger.setLevel(os.getenv('LOG_LEVEL'))
 
 class ViewModel:
     def __init__(self, items):
@@ -17,6 +22,7 @@ class ViewModel:
         for item in self._items:
             if item.status == 'To Do':
                 todo_items.append(item)
+        logger.debug(f'{len(todo_items)} TODO items returned from total {len(self._items)} records')
         return todo_items
 
     @property
@@ -25,6 +31,7 @@ class ViewModel:
         for item in self._items:
             if item.status == 'Doing':
                 doing_items.append(item)
+        logger.debug(f'{len(doing_items)} Doing  items returned from total {len(self._items)} records')
         return doing_items
 
     @property
@@ -33,6 +40,7 @@ class ViewModel:
         for item in self._items:
             if item.status == 'Done':
                 done_items.append(item)
+        logger.debug(f'{len(done_items)} Completed items returned from total {len(self._items)} records')
         return done_items
 
     @property
@@ -40,9 +48,9 @@ class ViewModel:
         recently_done_items = []
         starting_date = datetime.datetime.today() - datetime.timedelta(days=7)        
         for item in self._items:
-            if item.status == 'Done' and item.date_modified > datetime.datetime.today() - datetime.timedelta(days=7):
+            if item.status == 'Done' and item.date_modified > starting_date:
                 recently_done_items.append(item)
-        logging.debug(f'Filtered:  {len(recently_done_items)} items completed in week period from date :  {starting_date}')
+        logger.debug(f'Filtered:  {len(recently_done_items)} items recently completed in week period from date :  {starting_date}')
         return recently_done_items
 
 
