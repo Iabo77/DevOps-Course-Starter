@@ -42,10 +42,11 @@ def admin_only(func):
 def create_app():
     app = Flask(__name__)
     app.config.from_object(Config())
-    app.logger.setLevel(os.getenv('LOG_LEVEL'))
+    app.logger.setLevel(LOGLEVEL)
     if os.getenv('LOGGLY_TOKEN') is not None: 
-        app.logger.debug(f"https://logs-01.loggly.com/inputs/{os.getenv('LOGGLY_TOKEN')}/tag/todo-app")
-        handler = HTTPSHandler(f"https://logs-01.loggly.com/inputs/{os.getenv('LOGGLY_TOKEN')}/tag/todo-app") 
+        loggly_token = os.getenv('LOGGLY_TOKEN')
+        app.logger.debug(f"external token set : logging to https://logs-01.loggly.com/inputs/{loggly_token}/tag/todo-app")
+        handler = HTTPSHandler(f"https://logs-01.loggly.com/inputs/{loggly_token}/tag/todo-app") 
         handler.setFormatter(Formatter("[%(asctime)s] %(levelname)s in %(module)s: %(message)s")) 
         app.logger.addHandler(handler)
     if logger.getEffectiveLevel() == 10:
