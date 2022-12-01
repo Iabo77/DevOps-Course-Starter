@@ -11,8 +11,13 @@ from loggly.handlers import HTTPSHandler
 
 
 FORMAT = '%(asctime)s %(levelname)s %(module)s: %(message)s'
-LOGLEVEL = os.getenv('LOG_LEVEL', 'INFO')
-logging.basicConfig(format=FORMAT, level=LOGLEVEL)
+LOGLEVEL = os.getenv('LOG_LEVEL', 'INFO').upper()
+try:
+    logging.basicConfig(format=FORMAT, level=LOGLEVEL)
+except:
+    logging.basicConfig(format=FORMAT, level='INFO')
+    logging.warning(f'Log level  {LOGLEVEL} is invalid: Defaulting to INFO')
+
 logger = logging.getLogger(__name__)
 
 github_oauth_uri = os.getenv('GITHUB_OAUTH_URL')

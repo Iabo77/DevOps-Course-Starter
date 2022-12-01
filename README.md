@@ -120,4 +120,14 @@ By default authenticated users will be provided Reader (read only rights). Admin
 To elevate rights for testing/demo purposes add your UserID to the administrators variable list in app.py.  
 You used ID can be established by browsing the /PrivilegeError endpoint (once you are logged in, else no ID will be returned)
 
+## Logging
+
+Python logging is configured to both console and Loggly. 
+
+LOG_LEVEL is set as an environmental Variable and can be edited to the below values to allow more granular log capture. (Default is INFO)
+* DEBUG
+* INFO
+* WARNING
+* ERROR
+
 
