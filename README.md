@@ -122,7 +122,7 @@ You used ID can be established by browsing the /PrivilegeError endpoint (once yo
 
 ## Logging
 
-Python logging is configured to both console and Loggly. 
+Python logging is configured to both console and Loggly. To utilise external Loggly logging for own deployment generate and update the LOGGLY_TOKEN env variable with token from your own account. 
 
 LOG_LEVEL is set as an environmental Variable and can be edited to the below values to allow more granular log capture. (Default is INFO)
 * DEBUG
