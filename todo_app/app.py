@@ -6,10 +6,14 @@ from todo_app.data.views import ViewModel
 from flask_login import LoginManager, UserMixin, current_user, login_required, login_user
 import requests
 import logging
+from logging import Formatter
+from loggly.handlers import HTTPSHandler
 
-logging.basicConfig()
+
+FORMAT = '%(asctime)s %(levelname)s %(module)s: %(message)s'
+LOGLEVEL = os.getenv('LOG_LEVEL', 'INFO')
+logging.basicConfig(format=FORMAT, level=LOGLEVEL)
 logger = logging.getLogger(__name__)
-logger.setLevel(os.getenv('LOG_LEVEL'))
 
 github_oauth_uri = os.getenv('GITHUB_OAUTH_URL')
 client_id = os.getenv('CLIENT_ID')
@@ -39,6 +43,11 @@ def create_app():
     app = Flask(__name__)
     app.config.from_object(Config())
     app.logger.setLevel(os.getenv('LOG_LEVEL'))
+    if os.getenv('LOGGLY_TOKEN') is not None: 
+        app.logger.debug(f"https://logs-01.loggly.com/inputs/{os.getenv('LOGGLY_TOKEN')}/tag/todo-app")
+        handler = HTTPSHandler(f"https://logs-01.loggly.com/inputs/{os.getenv('LOGGLY_TOKEN')}/tag/todo-app") 
+        handler.setFormatter(Formatter("[%(asctime)s] %(levelname)s in %(module)s: %(message)s")) 
+        app.logger.addHandler(handler)
     if logger.getEffectiveLevel() == 10:
         app.logger.warning(f'Starting app with log level: {logging.getLevelName(logger.level)}: {logger.getEffectiveLevel()}')
         

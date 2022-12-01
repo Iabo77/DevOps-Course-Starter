@@ -156,6 +156,17 @@ MarkupSafe = ">=0.23"
 i18n = ["Babel (>=0.8)"]
 
 [[package]]
+name = "loggly-python-handler"
+version = "1.0.1"
+description = "Python logging handler that sends messages to Loggly"
+category = "main"
+optional = false
+python-versions = "*"
+
+[package.dependencies]
+requests-futures = ">=1.0.0"
+
+[[package]]
 name = "markupsafe"
 version = "2.0.1"
 description = "Safely add untrusted strings to HTML/XML markup."
@@ -289,6 +300,17 @@ socks = ["PySocks (>=1.5.6,!=1.5.7)", "win-inet-pton"]
 use_chardet_on_py3 = ["chardet (>=3.0.2,<5)"]
 
 [[package]]
+name = "requests-futures"
+version = "1.0.0"
+description = "Asynchronous Python HTTP for Humans."
+category = "main"
+optional = false
+python-versions = "*"
+
+[package.dependencies]
+requests = ">=1.2.0"
+
+[[package]]
 name = "sentinels"
 version = "1.0.0"
 description = "Various objects to denote special meanings in python"
@@ -352,7 +374,7 @@ testing = ["pytest (>=6)", "pytest-checkdocs (>=2.4)", "pytest-flake8", "pytest-
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.7"
-content-hash = "e684c149a031f9ffd5f395a5f3edc59534591dfcc333b0c79251cad9ad7a64c2"
+content-hash = "b5b79f5cc3dd17f9254cb7b5cf72bb9c30424f3ded934c0b7d7f1ee67c81f737"
 
 [metadata.files]
 atomicwrites = []
@@ -369,6 +391,7 @@ importlib-metadata = []
 iniconfig = []
 itsdangerous = []
 jinja2 = []
+loggly-python-handler = []
 markupsafe = []
 mongomock = []
 packaging = []
@@ -379,6 +402,7 @@ pyparsing = []
 pytest = []
 python-dotenv = []
 requests = []
+requests-futures = []
 sentinels = []
 tomli = []
 typing-extensions = []

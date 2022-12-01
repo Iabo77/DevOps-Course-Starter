@@ -3,10 +3,14 @@ from sys import dont_write_bytecode
 import datetime
 import logging
 import os
+from logging import Formatter
+from loggly.handlers import HTTPSHandler
 
-logging.basicConfig()
 logger = logging.getLogger(__name__)
-logger.setLevel(os.getenv('LOG_LEVEL'))
+if os.getenv('LOGGLY_TOKEN') is not None: 
+    handler = HTTPSHandler(f"https://logs-01.loggly.com/inputs/{os.getenv('LOGGLY_TOKEN')}/tag/todo-app") 
+    handler.setFormatter(Formatter("[%(asctime)s] %(levelname)s in %(module)s: %(message)s")) 
+    logger.addHandler(handler)
 
 class ViewModel:
     def __init__(self, items):
