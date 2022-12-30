@@ -97,6 +97,10 @@ def create_app():
         complete_item(id) 
         app.logger.info(f'Task completed. TaskID {id} Userid: {current_user.id}')           
         return redirect('/')
+    
+    @app.route ('/version')
+    def version():
+        return 'module-14 30.12.12'
           
             
     @app.route ('/AccessDenied')
