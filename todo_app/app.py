@@ -100,7 +100,7 @@ def create_app():
     
     @app.route ('/version')
     def version():
-        return 'module-14 30.12.12'
+        return 'module-14 30.12.12.2'
           
             
     @app.route ('/AccessDenied')
