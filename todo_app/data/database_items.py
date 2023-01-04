@@ -10,6 +10,10 @@ import logging
 from logging import Formatter
 from loggly.handlers import HTTPSHandler
 
+client = pymongo.MongoClient(os.getenv('CONNECTION_STRING'))
+database = client['todo_app']
+collection = database['items']
+
 logger = logging.getLogger(__name__)
 if os.getenv('LOGGLY_TOKEN') is not None: 
     handler = HTTPSHandler(f"https://logs-01.loggly.com/inputs/{os.getenv('LOGGLY_TOKEN')}/tag/todo-app") 
@@ -17,9 +21,7 @@ if os.getenv('LOGGLY_TOKEN') is not None:
     logger.addHandler(handler)
 
 def get_items(): 
-    client = pymongo.MongoClient(os.getenv('CONNECTION_STRING'))
-    database = client[os.getenv('DATABASE')]
-    collection = database[os.getenv('COLLECTION')]   
+    logger.debug(f'database name : {database}') 
     items = []
     database_items = collection.find()
     for item in database_items:
@@ -28,14 +30,8 @@ def get_items():
     return items        
 
 def add_item(title):    
-    client = pymongo.MongoClient(os.getenv('CONNECTION_STRING'))
-    database = client[os.getenv('DATABASE')]
-    collection = database[os.getenv('COLLECTION')] 
     collection.insert_one({'name':title,'status':'To Do','date_modified':datetime.now()})        
 
 def complete_item(_id):
-    client = pymongo.MongoClient(os.getenv('CONNECTION_STRING'))
-    database = client[os.getenv('DATABASE')]
-    collection = database[os.getenv('COLLECTION')] 
     collection.update_one({'_id': ObjectId(_id)}, {"$set": {'status':'Done', 'date_modified':datetime.now()}})
     
