@@ -19,8 +19,8 @@ def client():
     load_dotenv(file_path, override=True)             
     with mongomock.patch(servers=(('fakemongo.com', 27017),)):
         mongoclient = pymongo.MongoClient(os.getenv('CONNECTION_STRING'))
-        db = mongoclient[os.getenv('DATABASE')]
-        collection = db[os.getenv('COLLECTION')]        
+        db = mongoclient['todo_app']
+        collection = db['items']        
         collection.insert_one({'name': 'test item #222', 'status': 'To Do',  'date_modified' : datetime.now()})    
         test_app = app.create_app()
         test_app.config['LOGIN_DISABLED'] = True

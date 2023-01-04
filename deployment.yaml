@@ -15,22 +15,35 @@ spec:
     spec:
       containers:
         - name: todo-app
-          image: todo-app:minikube
+          image: todo-app:minikube.1
           env:
-          - name: FLASK_APP
-            value: todo_app/app
-          - name: FLASK_ENV
-            value: development
+          - name: CLIENT_ID
+            valueFrom:
+              secretKeyRef:
+                name: my-secrets
+                key: CLIENT_ID
+          - name: CLIENT_SECRET
+            valueFrom:
+              secretKeyRef:
+                name: secrets
+                key: CLIENT_SECRET
           - name: SECRET_KEY
-            value: ssssssdsdsdw
+            valueFrom:
+              secretKeyRef:
+                name: secrets
+                key: SECRET_KEY
+          - name: CONNECTION_STRING
+            valueFrom:
+              secretKeyRef:
+                name: secrets
+                key: CONNECTION_STRING
           - name: LOGGLY_TOKEN
-            value: 6750b0ff-0e89-4f97-842a-b3d9d47c789e
+            valueFrom:
+              secretKeyRef:
+                name: secrets
+                key: LOGGLY_TOKEN
           - name: PORT
             value: '5000'
-          - name: CLIENT_ID
-            value: 3c0ccb0936a4787ac81e
-          - name: CLIENT_SECRET
-            value: 8d39d1e5fdb67d1fcff70ea43fe8db242452dccb
           imagePullPolicy: Never
           ports:
           - containerPort: 5000
