@@ -1,0 +1,36 @@
+# deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: todo-app
+spec:
+  selector:
+    matchLabels:
+      app: todo-app
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: todo-app
+    spec:
+      containers:
+        - name: todo-app
+          image: todo-app:minikube
+          env:
+          - name: FLASK_APP
+            value: todo_app/app
+          - name: FLASK_ENV
+            value: development
+          - name: SECRET_KEY
+            value: ssssssdsdsdw
+          - name: LOGGLY_TOKEN
+            value: 6750b0ff-0e89-4f97-842a-b3d9d47c789e
+          - name: PORT
+            value: '5000'
+          - name: CLIENT_ID
+            value: 3c0ccb0936a4787ac81e
+          - name: CLIENT_SECRET
+            value: 8d39d1e5fdb67d1fcff70ea43fe8db242452dccb
+          imagePullPolicy: Never
+          ports:
+          - containerPort: 5000

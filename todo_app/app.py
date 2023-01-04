@@ -20,10 +20,10 @@ except:
 
 logger = logging.getLogger(__name__)
 
-github_oauth_uri = os.getenv('GITHUB_OAUTH_URL')
+github_oauth_uri = 'https://github.com/login/oauth/authorize'
 client_id = os.getenv('CLIENT_ID')
 client_secret = os.getenv('CLIENT_SECRET')
-redirect_uri = os.getenv('REDIRECT_URI')
+redirect_uri = 'http://127.0.0.1:5000/login/callback'
 token_url = 'https://github.com/login/oauth/access_token'
 
 administrators = ['94004061'] # list of admin userIds. hardcoded for demo/testing purposes. 
