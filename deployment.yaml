@@ -1,0 +1,49 @@
+# deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: todo-app
+spec:
+  selector:
+    matchLabels:
+      app: todo-app
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: todo-app
+    spec:
+      containers:
+        - name: todo-app
+          image: todo-app:minikube.1
+          env:
+          - name: CLIENT_ID
+            valueFrom:
+              secretKeyRef:
+                name: my-secrets
+                key: CLIENT_ID
+          - name: CLIENT_SECRET
+            valueFrom:
+              secretKeyRef:
+                name: secrets
+                key: CLIENT_SECRET
+          - name: SECRET_KEY
+            valueFrom:
+              secretKeyRef:
+                name: secrets
+                key: SECRET_KEY
+          - name: CONNECTION_STRING
+            valueFrom:
+              secretKeyRef:
+                name: secrets
+                key: CONNECTION_STRING
+          - name: LOGGLY_TOKEN
+            valueFrom:
+              secretKeyRef:
+                name: secrets
+                key: LOGGLY_TOKEN
+          - name: PORT
+            value: '5000'
+          imagePullPolicy: Never
+          ports:
+          - containerPort: 5000

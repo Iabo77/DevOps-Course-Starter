@@ -130,4 +130,35 @@ LOG_LEVEL is set as an environmental Variable and can be edited to the below val
 * WARNING
 * ERROR
 
+  
+    
+# MiniKube Set up
+ To configure a local minikube deployment of the todo-app. Assuming Docker desktop and Minikube are set up locally.
+
+ ### secret.yaml base format
+there is a secrets_.yaml file supplied with the code - enter required values as specified and rename to secrets.yaml
+
+### Build base Docker Image
+`docker build --target production --tag todo-app:minikube.1 .`
+
+## Kubernetes/Minikube Deployment
+ Load docker image to minikube cache  
+`minikube image load todo-app:minikube.1`  
+Start the deployments of services and files  
+`kubectl apply -f secrets.yaml`  
+`kubectl apply -f deployment.yaml`  
+`kubectl apply -f service.yaml`  
+  
+start port forwarding of local ports to container  
+`kubectl port-forward service/todo-app 5000:5000`
+
+The todoapp web site should now be accessible on localhost:5000 running from local minikube cluster
+
+
+
+
+
+
+
+
 
